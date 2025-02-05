@@ -12,7 +12,7 @@ Route::get('/logout', function () {
 })->name('logout');
 
 Route::view('/', 'landing')->name('home');
-Route::view('/content', 'landing')->name('content');
+Route::view('/content', 'content')->name('content');
 Route::view('/pricing', 'landing')->name('pricing');
 Route::middleware(['auth', 'role.redirect', 'verified'])->get('/dashboard', function () {})->name('dashboard');
 
