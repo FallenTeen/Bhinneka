@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => bcrypt('123'),
             'role_id' => 1, //Admin
+            'subscribed' => true,
         ]);
 
         User::create([
@@ -25,25 +26,43 @@ class UserSeeder extends Seeder
             'email' => 'investor@gmail.com',
             'password' => bcrypt('123'),
             'role_id' => 2, // Investor
+            'subscribed' => true,
         ]);
 
         User::create([
             'name' => 'Content Creator',
             'email' => 'creator@gmail.com',
             'password' => bcrypt('123'),
-            'role_id' => 3, //Creator
+            'role_id' => 4, //User
+            'subscribed' => true,
+        ]);
+        User::create([
+            'name' => 'Content Creator',
+            'email' => 'creator2@gmail.com',
+            'password' => bcrypt('123'),
+            'role_id' => 4, //User
+            'subscribed' => false,
         ]);
         User::create([
             'name' => 'User',
             'email' => 'user@gmail.com',
             'password' => bcrypt('123'),
             'role_id' => 4, //User
+            'subscribed' => false,
+        ]);
+        User::create([
+            'name' => 'User',
+            'email' => 'user2@gmail.com',
+            'password' => bcrypt('123'),
+            'role_id' => 4, //User
+            'subscribed' => true,
         ]);
         User::create([
             'name' => 'Guest',
             'email' => 'guest@gmail.com',
             'password' => bcrypt('123'),
             'role_id' => 5, //Guest
+            'subscribed' => true,
         ]);
     }
 }

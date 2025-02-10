@@ -15,7 +15,15 @@
         <x-custom.navbarlanding></x-custom.navbarlanding>
     </div>
 
-    
+    <div class="mt-16 my-8">
+        @livewire('component.content-searchbar')
+    </div>
+    <section id="allcontent">
+        @livewire('component.content-video-all')
+       
+
+    </section>
+
     <x-custom.footerlanding></x-custom.footerlanding>
 </body>
 

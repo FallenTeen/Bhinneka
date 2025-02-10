@@ -22,6 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'subscribed',
     ];
 
     /**
@@ -44,11 +45,25 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'subscribed' => 'boolean',
         ];
     }
 
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasOne(Subscription::class);
+    }
+    public function channels()
+    {
+        return $this->hasMany(Channel::class);
+    }
+    public function contentVideos()
+    {
+        return $this->hasManyThrough(ContentVideo::class, Channel::class);
     }
 }

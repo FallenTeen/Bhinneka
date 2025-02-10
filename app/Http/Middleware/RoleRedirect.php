@@ -25,6 +25,8 @@ class RoleRedirect
                     return redirect()->route('creator.dashboard');
                 case 'Investor':
                     return redirect()->route('investor.dashboard');
+                case 'User':
+                    return redirect()->route('user.dashboard');
                 default:
                     return redirect()->route('home');
             }

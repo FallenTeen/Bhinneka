@@ -2,7 +2,8 @@
     <div class="flex items-center justify-between max-w-screen-xl px-4 mx-auto">
         <!-- Logo Section -->
         <a href="{{ route('home')}}" class="flex items-center">
-            <span class="self-center text-ungumain text-xl font-semibold whitespace-nowrap dark:text-white">Bhinneka</span>
+            <span
+                class="self-center text-ungumain text-xl font-semibold whitespace-nowrap dark:text-white">Bhinneka</span>
             <span class="text-center self-center justify-center text-xl">.Space</span>
         </a>
 
@@ -10,34 +11,32 @@
         <div class="hidden lg:flex items-center space-x-8">
             <ul class="flex space-x-8">
                 @php
-                $currentRoute = Route::currentRouteName();
+                    $currentRoute = Route::currentRouteName();
                 @endphp
                 <li>
-                    <a href="{{ route('home') }}" class="{{ $currentRoute === 'home' ? 'text-purple-700' : 'text-gray-700 dark:text-white hover:text-purple-700 transition-all duration-300' }}">
+                    <a href="{{ route('home') }}"
+                        class="{{ $currentRoute === 'home' ? 'text-purple-700' : 'text-gray-700 dark:text-white hover:text-purple-700 transition-all duration-300' }}">
                         Home
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('content') }}" class="{{ $currentRoute === 'content' ? 'text-purple-700' : 'text-gray-700 dark:text-white hover:text-purple-700 transition-all duration-300' }}">
+                    <a href="{{ route('content') }}"
+                        class="{{ $currentRoute === 'content' ? 'text-purple-700' : 'text-gray-700 dark:text-white hover:text-purple-700 transition-all duration-300' }}">
                         Content
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('pricing') }}" class="{{ $currentRoute === 'pricing' ? 'text-purple-700' : 'text-gray-700 dark:text-white hover:text-purple-700 transition-all duration-300' }}">
-                        Pricing
-                    </a>
-                </li>
+
             </ul>
 
         </div>
         <div class="z-40 hidden lg:flex">
             @if(Auth::check())
-            <span class="text-white font-medium">{{ Auth::user()->name }}</span>
+                <span class="text-gray-900 font-medium">Hello, {{ Auth::user()->name }}</span>
             @else
-            <a href="{{ route('register') }}"
-                class="text-white bg-ungumain hover:bg-purple-500 hover:text-white focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 transition-all duration-300">
-                Join Us Now!
-            </a>
+                <a href="{{ route('register') }}"
+                    class="text-white bg-ungumain hover:bg-purple-500 hover:text-white focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800 transition-all duration-300">
+                    Join Us Now!
+                </a>
             @endif
         </div>
 
@@ -61,11 +60,8 @@
     <div class="lg:hidden hidden" id="mobile-menu-2">
         <ul class="flex flex-col items-center py-4 space-y-4 font-medium">
             <li><a href="#" class="text-gray-700 dark:text-white hover:text-purple-700">Home</a></li>
-            <li><a href="#" class="text-gray-700 dark:text-white hover:text-purple-700">Company</a></li>
-            <li><a href="#" class="text-gray-700 dark:text-white hover:text-purple-700">Marketplace</a></li>
-            <li><a href="#" class="text-gray-700 dark:text-white hover:text-purple-700">Features</a></li>
-            <li><a href="#" class="text-gray-700 dark:text-white hover:text-purple-700">Team</a></li>
-            <li><a href="#" class="text-gray-700 dark:text-white hover:text-purple-700">Contact</a></li>
+            <li><a href="#" class="text-gray-700 dark:text-white hover:text-purple-700">Content</a></li>
+
         </ul>
     </div>
 </nav>
