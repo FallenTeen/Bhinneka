@@ -38,8 +38,11 @@
                                 @endif
                             </div>
                             <p class="text-sm text-gray-600">{{ $video->deskripsi }}</p>
-                            <p class="text-sm text-gray-400 pt-4">{{ $video->channel->channel_name }} -
-                                {{ $video->channel->user->name }}
+                            <p class="text-sm text-gray-400 pt-4">
+                                <a href="{{ route('channel.show', $video->channel->slug) }}"
+                                    class="text-ungumain hover:underline">
+                                    {{ $video->channel->channel_name }} - {{ $video->channel->user->name }}
+                                </a>
                             </p>
                         </div>
                         @if (!$isSubscribed && $video->is_exclusive)
@@ -55,7 +58,8 @@
             @endforeach
         @else
             <div class="w-full flex justify-center">
-                <span class="justify-center text-center px-12 py-6 bg-white shadow-lg rounded-lg text-xl">Tidak ada konten yang sesuai dengan Pencarian tersebut.</span>
+                <span class="justify-center text-center px-12 py-6 bg-white shadow-lg rounded-lg text-xl">Tidak ada konten
+                    yang sesuai dengan Pencarian tersebut.</span>
             </div>
         @endif
     </div>

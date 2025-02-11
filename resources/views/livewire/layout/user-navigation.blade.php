@@ -45,7 +45,7 @@ new class extends Component {
     <!-- MAX SIDEBAR-->
     <div class="max hidden text-white mt-16 flex-col space-y-2 w-full h-[calc(100vh)]">
         <div class="flex flex-col w-full px-6 rounded-full transform ease-in-out duration-300">
-            <div>
+            <div class="px-4">
                 @if (Auth::check() && Auth::user()->channels->isNotEmpty())
                     <a href="{{route('user.channel')}}" class="flex flex-row items-center gap-4">
                         @if (Auth::user()->channels->first()->verified)
@@ -100,8 +100,8 @@ new class extends Component {
         </div>
         <div onclick="openNav()"
             class="border-2 border-transparent hover:ml-4 justify-end pr-5 text-gray-200 hover:text-purple-500 dark:hover:text-blue-500 w-full bg-[#1E293B] p-2 rounded-full transform ease-in-out duration-300 flex">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
-                stroke="currentColor" class="w-4 h-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1}
+                stroke="currentColor" class="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round"
                     d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
             </svg>

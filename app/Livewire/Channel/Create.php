@@ -51,8 +51,7 @@ class Create extends Component
             'verified' => false,
         ]);
 
-        session()->flash('message', 'Channel berhasil dibuat!');
-        return redirect()->route('user.channel.create');
+        return redirect()->route('user.channel');
     }
     public function render()
     {

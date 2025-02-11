@@ -12,6 +12,7 @@ class Channel extends Model
     protected $fillable = [
         'user_id',
         'channel_name',
+        'avatar',
         'slug',
         'exlink',
         'verified',

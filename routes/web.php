@@ -22,6 +22,7 @@ Route::get('/captcha/refresh', function (Request $request) {
 Route::view('/', 'landing')->name('home');
 Route::view('/content', 'content')->name('content');
 Route::view('/pricing', 'landing')->name('pricing');
+Route::get('/channel/{slug}', \App\Livewire\Component\ChannelShow::class)->name('channel.show');
 Route::middleware(['auth', 'role.redirect', 'verified'])->get('/dashboard', function () { })->name('dashboard');
 
 Route::get('/thumbnail/{encrypted}', function ($encrypted) {
@@ -29,7 +30,7 @@ Route::get('/thumbnail/{encrypted}', function ($encrypted) {
         $url = Crypt::decryptString($encrypted);
         return redirect($url);
     } catch (\Exception $e) {
-        abort(404); // Jika gagal didekripsi, tampilkan 404
+        abort(404);
     }
 })->where('encrypted', '.*');
 // Admin
@@ -44,6 +45,8 @@ Route::middleware(['role:User', 'auth', 'verified'])->group(function () {
         Route::view('/channel', 'user.channel')->name('user.channel');
         Route::view('/channel/edit', 'user.channel.edit')->name('user.channel.edit');
         Route::view('/channel/dashboard', 'user.channel.dashboard')->name('user.channel.dashboard');
+
+        Route::get('/channel/content/create', \App\Livewire\Video\VideoContentCreate::class)->name('user.content.create');
     });
 
     Route::view('/user/dashboard', 'user.dashboard')->name('user.dashboard');
