@@ -49,7 +49,7 @@
 
                                 @endif
                             </div>
-                            <p class="text-sm text-gray-600 line-clamp-2 min-h-[3em]">{{ $video->deskripsi }}</p>
+                            <p class="text-sm text-gray-600">{{ $video->deskripsi }}</p>
                             <p class="text-sm text-gray-400 pt-4">
                                 <a href="{{ route('channel.show', $video->channel->slug) }}"
                                     class="text-ungumain hover:underline">
@@ -68,16 +68,11 @@
                     </div>
                 </div>
             @endforeach
-        @else
-            <div class="w-full flex justify-center">
-                <span class="justify-center text-center px-12 py-6 bg-white shadow-lg rounded-lg text-xl">Tidak ada konten
-                    yang sesuai dengan Pencarian tersebut.</span>
-            </div>
         @endif
     </div>
 
     <!-- Show More Button -->
-    @if ($contentVideos->count() == $jml_display)
+    @if ($contentVideos->count() > $jml_display)
         <div class="w-full flex justify-center py-6">
             <button wire:click="loadMore"
                 class="px-6 py-2 bg-ungumain text-white font-bold rounded-full hover:bg-goldmain hover:text-gray-900 border-3 border-ungumain hover:border-ungumain hover:border-3 ">

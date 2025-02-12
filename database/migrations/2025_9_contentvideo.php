@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('deskripsi')->nullable();
             $table->string('url');
             $table->boolean('is_exclusive')->default(false);
+            $table->boolean('show')->default(true);
             $table->timestamps();
         });
     }

@@ -14,14 +14,14 @@
                 <span class="text-lg font-bold mb-3">Channel Information</span>
                 <div>Tombol Hapus,dkk</div>
             </div>
-            <div class="w-full flex">
-                <div class="lg:w-24">
+            <div class="w-full flex items-center">
+                <div class="lg:w-32">
                     @if(optional(Auth::user()->channels->first())->avatar)
                         <img src="{{ asset('storage/' . Auth::user()->channels->first()->avatar) }}"
                             class="w-full aspect-auto rounded-full" alt="">
                     @else
-                        <img src="{{ asset('images/default-avatar.png') }}" alt="Default Avatar" class="rounded-circle"
-                            width="100">
+                        <img src="{{ asset('storage/avatarsimages/default-avatar.png') }}" alt="Default Avatar"
+                            class="w-full aspect-auto rounded-full">
                     @endif
                 </div>
                 <div class="w-grow px-8">

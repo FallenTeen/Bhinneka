@@ -7,17 +7,18 @@ use Livewire\Component;
 
 class ChannelShow extends Component
 {
-    public $channel;
+    public $channel, $slug, $externalLinks;
     public $contentVideos;
 
     public function mount($slug)
     {
         $this->channel = Channel::where('slug', $slug)->firstOrFail();
         $this->contentVideos = $this->channel->contentVideos;
+        $this->externalLinks = json_decode($this->channel->exlink, true);
     }
 
     public function render()
     {
-        return view('livewire.component.channel-show')->layout('layouts.app');
+        return view('livewire.component.channel-show');
     }
 }

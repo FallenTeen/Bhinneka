@@ -22,7 +22,7 @@ Route::get('/captcha/refresh', function (Request $request) {
 Route::view('/', 'landing')->name('home');
 Route::view('/content', 'content')->name('content');
 Route::view('/pricing', 'landing')->name('pricing');
-Route::get('/channel/{slug}', \App\Livewire\Component\ChannelShow::class)->name('channel.show');
+Route::view('/channels/{slug}', 'channelshow')->name('channel.show');
 Route::middleware(['auth', 'role.redirect', 'verified'])->get('/dashboard', function () { })->name('dashboard');
 
 Route::get('/thumbnail/{encrypted}', function ($encrypted) {

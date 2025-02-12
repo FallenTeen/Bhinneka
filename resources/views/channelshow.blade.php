@@ -15,15 +15,9 @@
         <x-custom.navbarlanding></x-custom.navbarlanding>
     </div>
 
-    <div class="mt-16 my-8">
-        @livewire('component.content-searchbar')
+    <div class="mt-16">
+        @livewire('component.channelshow', ['slug' => $slug])
     </div>
-    <section id="allcontent">
-        @livewire('component.content-video-all',['randomize' => true])
-       
-
-    </section>
-
     <x-custom.footerlanding></x-custom.footerlanding>
 </body>
 

@@ -38,21 +38,9 @@ class ContentVideoAll extends Component
         $this->mount();
     }
 
-    // public function mount()
-    // {
-    //     $this->contentVideos = ContentVideo::with('channel')
-    //         ->inRandomOrder()
-    //         ->take($this->jml_display)
-    //         ->get()
-    //         ->map(function ($video) {
-    //             $video->thumb = $this->getGoogleDriveThumbnail($video->url);
-    //             return $video;
-    //         });
-    // }
-
-
     public function mount()
     {
+        $user = Auth::user();
         $query = ContentVideo::with('channel');
 
         if ($this->search) {
@@ -68,11 +56,13 @@ class ContentVideoAll extends Component
         $this->contentVideos = $query->inRandomOrder()
             ->take($this->jml_display)
             ->get()
-            ->map(function ($video) {
+            ->map(function ($video) use ($user) {
                 $video->thumb = $this->getGoogleDriveThumbnail($video->url);
+                $video->isOwner = $user->channels->contains('id', $video->channel->id);
                 return $video;
             });
     }
+
     public function render()
     {
         $user = Auth::user();

@@ -7,9 +7,9 @@ use App\Models\ContentVideo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
-class ContentVideoCard extends Component
+class ContentVideoChannel extends Component
 {
-    public $contentVideos, $jml_display = 12;
+    public $contentVideos, $jml_display = 4, $slug;
 
     private function getGoogleDriveThumbnail($url)
     {
@@ -22,12 +22,21 @@ class ContentVideoCard extends Component
         return Crypt::encryptString($thumbnailUrl);
     }
 
-    public function mount()
+    public function loadMore()
+    {
+        $this->jml_display += 4;
+        $this->updateContentVideos();
+    }
+
+    public function mount($slug)
     {
         $user = Auth::user();
-        $this->contentVideos = ContentVideo::with('channel')
-            ->take($this->jml_display)
+        $query = ContentVideo::with('channel');
+        $this->contentVideos = $query->whereHas('channel', function ($q) use ($slug) {
+            $q->where('slug', $slug);
+        })
             ->inRandomOrder()
+            ->take($this->jml_display)
             ->get()
             ->map(function ($video) use ($user) {
                 $video->thumb = $this->getGoogleDriveThumbnail($video->url);
@@ -36,11 +45,13 @@ class ContentVideoCard extends Component
             });
     }
 
+
+
     public function render()
     {
         $user = Auth::user();
         $isSubscribed = $user && $user->subscribed;
-        return view('livewire.component.content-video-card', [
+        return view('livewire.component.content-video-channel', [
             'contentVideos' => $this->contentVideos,
             'isSubscribed' => $isSubscribed,
         ]);

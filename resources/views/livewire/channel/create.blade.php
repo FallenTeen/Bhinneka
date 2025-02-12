@@ -66,8 +66,6 @@
             <input type="text" wire:model="exlink.1" class="w-full p-2 border rounded mb-2" placeholder="Instagram">
             <input type="text" wire:model="exlink.2" class="w-full p-2 border rounded mb-2" placeholder="YouTube">
         </div>
-
-        <!-- Terms and Agreement -->
         <div class="flex flex-col gap-3">
             <h3 class="text-lg font-bold">Persyaratan</h3>
             <label class="flex items-center space-x-2">
@@ -78,7 +76,6 @@
             </label>
             @error('terms_agreement') <span class="text-red-500">{{ $message }}</span> @enderror
 
-            <!-- CAPTCHA -->
             <div class="mt-4">
                 <label class="block text-gray-700">Verifikasi Captcha</label>
                 <div class="flex items-center space-x-3">
