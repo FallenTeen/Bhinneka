@@ -41,16 +41,20 @@ class ContentVideoAll extends Component
     public function mount()
     {
         $user = Auth::user();
-        $query = ContentVideo::with('channel');
+        $query = ContentVideo::with('channel')->where('show', true);
 
         if ($this->search) {
-            $query->where('judul', 'like', "%{$this->search}%")
-                ->orWhereHas('channel', function ($q) {
-                    $q->where('channel_name', 'like', "%{$this->search}%")
-                        ->orWhereHas('user', function ($q) {
-                            $q->where('name', 'like', "%{$this->search}%");
-                        });
-                });
+            $searchTerm = strtolower($this->search);
+
+            $query->where(function ($query) use ($searchTerm) {
+                $query->whereRaw('LOWER(judul) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereHas('channel', function ($q) use ($searchTerm) {
+                        $q->whereRaw('LOWER(channel_name) LIKE ?', ["%{$searchTerm}%"])
+                            ->orWhereHas('user', function ($q) use ($searchTerm) {
+                                $q->whereRaw('LOWER(name) LIKE ?', ["%{$searchTerm}%"]);
+                            });
+                    });
+            });
         }
 
         $this->contentVideos = $query->inRandomOrder()
@@ -58,7 +62,7 @@ class ContentVideoAll extends Component
             ->get()
             ->map(function ($video) use ($user) {
                 $video->thumb = $this->getGoogleDriveThumbnail($video->url);
-                $video->isOwner = $user->channels->contains('id', $video->channel->id);
+                $video->isOwner = $user && $user->channels->contains('id', $video->channel->id);
                 return $video;
             });
     }

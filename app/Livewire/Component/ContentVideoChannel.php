@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Crypt;
 class ContentVideoChannel extends Component
 {
     public $contentVideos, $jml_display = 4, $slug;
+    public $hidename = false;
 
     private function getGoogleDriveThumbnail($url)
     {
@@ -31,7 +32,7 @@ class ContentVideoChannel extends Component
     public function mount($slug)
     {
         $user = Auth::user();
-        $query = ContentVideo::with('channel');
+        $query = ContentVideo::with('channel')->where('show', true);
         $this->contentVideos = $query->whereHas('channel', function ($q) use ($slug) {
             $q->where('slug', $slug);
         })

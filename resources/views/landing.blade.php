@@ -18,7 +18,7 @@
     <section
         class="relative h-full lg:translate-y-12 items-center w-full px-6 lg:px-14 grid-cols-2 mx-auto overflow-x-hidden lg:grid md:py-14 lg:py-24 xl:py-14 lg:mt-3 xl:mt-5">
 
-        <div class="pr-2 md:mb-14 py-14 md:py-0">
+        <div data-aos="fade-left" class="pr-2 md:mb-14 py-14 md:py-0">
             <h1 class="text-3xl font-semibold text-ungumain xl:text-5xl lg:text-3xl"><span
                     class="block w-full">Bhinneka<span class="text-white font-medium">.Space</span></span></h1>
             <p class="py-4 text-lg text-gray-900 2xl:py-8 md:py-6 2xl:pr-5">
@@ -168,8 +168,7 @@
                     <div
                         class="hover:scale-105 duration-300 hover:border-none lg:w-1/2 lg:-mt-px w-full mb-10 lg:mb-0 border-2 rounded-lg border-ungumain relative">
                         <span
-                            class="bg-ungumain text-white px-3 py-1 tracking-widest text-xs absolute right-0 top-0 rounded-bl">PALING
-                            BANYAK DIBELI</span>
+                            class="bg-ungumain text-white px-3 py-1 tracking-widest text-xs absolute right-0 top-0 rounded-bl">ONE-TIME PURCHASE</span>
                         <div class="px-2 text-center h-48 flex flex-col items-center justify-center">
                             <h3 class="tracking-widest">Subscribe</h3>
                             <h2

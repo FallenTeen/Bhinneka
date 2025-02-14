@@ -15,8 +15,9 @@
         <x-custom.navbarlanding></x-custom.navbarlanding>
     </div>
 
-    <div class="mt-16">
-        @livewire('component.channelshow', ['slug' => $slug])
+    <div class="mt-16 flex flex-col">
+        @livewire('component.channel-show', ['slug' => $slug])
+
     </div>
     <x-custom.footerlanding></x-custom.footerlanding>
 </body>

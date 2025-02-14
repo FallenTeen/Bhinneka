@@ -25,7 +25,7 @@
             </a>
         </div>
 
-        <div class="flex w-full sm:max-w-3xl justify-center mt-6 backdrop-blur-xl shadow-2xl">
+        <div class="flex w-full sm:max-w-4xl justify-center mt-6 backdrop-blur-xl shadow-2xl">
             <div
                 class="lg:w-1/2 text-white hidden lg:flex bg-purple-600/50   rounded-l-lg flex-col items-center justify-center">
                 <h1 class="text-4xl font-bold">Selamat Datang Di</h1>

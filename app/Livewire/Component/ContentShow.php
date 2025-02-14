@@ -4,12 +4,13 @@ namespace App\Livewire\Component;
 
 use Livewire\Component;
 use App\Models\ContentVideo;
+use App\Models\Channel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
-class ContentVideoCard extends Component
+class ContentShow extends Component
 {
-    public $contentVideos, $jml_display = 12;
+    public $contentVideos, $channel, $thumb;
 
     private function getGoogleDriveThumbnail($url)
     {
@@ -22,26 +23,24 @@ class ContentVideoCard extends Component
         return Crypt::encryptString($thumbnailUrl);
     }
 
-    public function mount()
+    public function mount($slug)
     {
         $user = Auth::user();
-        $this->contentVideos = ContentVideo::with('channel')->where('show', true)
-            ->take($this->jml_display)
-            ->inRandomOrder()
-            ->get()
-            ->map(function ($video) use ($user) {
-                $video->thumb = $this->getGoogleDriveThumbnail($video->url);
-                $video->isOwner = $user && $user->channels->contains('id', $video->channel->id);
-                return $video;
-            });
+        $this->contentVideos = ContentVideo::where('slug', $slug)->where('show', true)->firstOrFail();
+        $this->isOwner = $user && $user->channels->contains('id', $this->contentVideos->channel->id);
+        $this->thumb = $this->getGoogleDriveThumbnail($this->contentVideos->url);
+        $this->channel = $this->contentVideos->channel;
     }
+
 
     public function render()
     {
         $user = Auth::user();
         $isSubscribed = $user && $user->subscribed;
-        return view('livewire.component.content-video-card', [
+        return view('livewire.component.content-show', [
             'contentVideos' => $this->contentVideos,
+            'isOwner' => $this->isOwner,
+            'thumb' => $this->thumb,
             'isSubscribed' => $isSubscribed,
         ]);
     }

@@ -61,8 +61,8 @@
     <!-- Mobile Menu (hidden by default) -->
     <div class="lg:hidden hidden" id="mobile-menu-2">
         <ul class="flex flex-col items-center py-4 space-y-4 font-medium">
-            <li><a href="#" class="text-gray-700 dark:text-white hover:text-purple-700">Home</a></li>
-            <li><a href="#" class="text-gray-700 dark:text-white hover:text-purple-700">Content</a></li>
+            <li><a href="{{ route('home') }}" class="text-gray-700 dark:text-white hover:text-purple-700">Home</a></li>
+            <li><a href="{{ route('content') }}" class="text-gray-700 dark:text-white hover:text-purple-700">Content</a></li>
 
         </ul>
     </div>

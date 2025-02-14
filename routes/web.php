@@ -23,6 +23,7 @@ Route::view('/', 'landing')->name('home');
 Route::view('/content', 'content')->name('content');
 Route::view('/pricing', 'landing')->name('pricing');
 Route::view('/channels/{slug}', 'channelshow')->name('channel.show');
+Route::view('/content/{slug}', 'contentshow')->name('content.show');
 Route::middleware(['auth', 'role.redirect', 'verified'])->get('/dashboard', function () { })->name('dashboard');
 
 Route::get('/thumbnail/{encrypted}', function ($encrypted) {
@@ -32,7 +33,9 @@ Route::get('/thumbnail/{encrypted}', function ($encrypted) {
     } catch (\Exception $e) {
         abort(404);
     }
-})->where('encrypted', '.*');
+})->where('encrypted', '.*')->name('thumbnail');
+
+
 // Admin
 Route::middleware(['role:Admin', 'auth', 'verified'])->group(function () {
     Route::view('/admin/dashboard', 'admin.dashboard')->name('admin.dashboard');

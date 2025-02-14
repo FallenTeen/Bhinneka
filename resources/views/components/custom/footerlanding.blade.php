@@ -26,7 +26,7 @@
                     <div class="block">
                         <h6 class="text-lg font-medium text-gray-900 mb-7 max-md:text-center">Bhinneka</h6>
                         <ul class="flex flex-col max-md:items-center gap-6">
-                            <li><a href="javascript:;" class="text-base font-normal text-gray-600 max-md:text-center transition-all duration-300 hover:text-ungumain focus-within:outline-0 focus-within:text-ungumain">Home</a></li>
+                            <li><a href="{{ route('home') }}" class="text-base font-normal text-gray-600 max-md:text-center transition-all duration-300 hover:text-ungumain focus-within:outline-0 focus-within:text-ungumain">Home</a></li>
                             <li><a href="javascript:;" class="text-base font-normal text-gray-600 max-md:text-center transition-all duration-300 hover:text-ungumain focus-within:outline-0 focus-within:text-ungumain">About</a></li>
                             <li><a href="javascript:;" class="text-base font-normal text-gray-600 max-md:text-center transition-all duration-300 hover:text-ungumain focus-within:outline-0 focus-within:text-ungumain">Pricing</a></li>
                             <li><a href="javascript:;" class="text-base font-normal text-gray-600 max-md:text-center transition-all duration-300 hover:text-ungumain focus-within:outline-0 focus-within:text-ungumain">Subscription</a></li>
@@ -35,8 +35,8 @@
                     <div class="block">
                         <h6 class="text-lg font-medium text-gray-900 max-md:text-center mb-7">Konten</h6>
                         <ul class="flex flex-col max-md:items-center gap-6">
-                            <li><a href="javascript:;" class="text-base font-normal text-gray-600 transition-all duration-300 hover:text-ungumain focus-within:outline-0 focus-within:text-ungumain">Daftar</a></li>
-                            <li><a href="javascript:;" class="text-base font-normal text-gray-600 transition-all duration-300 hover:text-ungumain focus-within:outline-0 focus-within:text-ungumain">Semua Konten</a></li>
+                            <li><a href="/register" class="text-base font-normal text-gray-600 transition-all duration-300 hover:text-ungumain focus-within:outline-0 focus-within:text-ungumain">Daftar</a></li>
+                            <li><a href="{{ route('content') }}" class="text-base font-normal text-gray-600 transition-all duration-300 hover:text-ungumain focus-within:outline-0 focus-within:text-ungumain">Semua Konten</a></li>
                             <li><a href="javascript:;" class="text-base font-normal text-gray-600 transition-all duration-300 hover:text-ungumain focus-within:outline-0 focus-within:text-ungumain">Demo</a></li>
                             <li><a href="javascript:;" class="text-base font-normal text-gray-600 transition-all duration-300 hover:text-ungumain focus-within:outline-0 focus-within:text-ungumain">Pro Version</a></li>
                         </ul>

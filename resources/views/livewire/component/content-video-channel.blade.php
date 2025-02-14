@@ -2,16 +2,19 @@
     @php
         use Illuminate\Support\Facades\Crypt;
     @endphp
-
+    @if ($contentVideos->count() > 0)
+        <p class="{{ $hidename ? 'hidden' : 'px-12 text-3xl font-bold my-3' }}">
+            {{ $contentVideos->first()->channel->channel_name }}'s Content
+        </p>
+    @endif
     <div
         class="grid justify-center items-center grid-cols-{{ $contentVideos->count() == 0 ? '1' : '1 md:grid-cols-3 lg:grid-cols-4' }} gap-8 px-8">
 
         @if ($contentVideos->count() > 0)
-
             @foreach ($contentVideos as $video)
                 <div class="flex-none w-full snap-start relative group">
                     <div
-                        class="bg-white shadow-lg rounded-lg overflow-hidden transform transition-all duration-300 ease-in-out group-hover:scale-105">
+                        class="bg-white shadow-lg rounded-lg overflow-hidden transform transition-all duration-300 ease-in-out group-hover:scale-105 hover:shadow-2xl">
                         <div class="relative pb-[56.25%] h-0">
                             @if(!$isSubscribed && $video->is_exclusive && !$video->isOwner)
                                 <img src="{{ route('thumbnail', ['encodedUrl' => $video->thumb]) }}" alt="{{ $video->judul }} "
@@ -49,16 +52,17 @@
 
                                 @endif
                             </div>
-                            <p class="text-sm text-gray-600">{{ $video->deskripsi }}</p>
+                            <p class="text-sm text-gray-600 line-clamp-2 min-h-[3em]">{{ $video->deskripsi }}</p>
                             <p class="text-sm text-gray-400 pt-4">
                                 <a href="{{ route('channel.show', $video->channel->slug) }}"
-                                    class="text-ungumain hover:underline">
+                                    class="text-ungumain hover:underline line-clamp-1">
                                     {{ $video->channel->channel_name }} - {{ $video->channel->user->name }}
                                 </a>
+
                             </p>
                         </div>
                         @if (!$isSubscribed && $video->is_exclusive && !$video->isOwner)
-                            <a href="youtube.com" target="_blank"
+                            <a href="{{ route('content.show', $video->slug) }}" target="_blank"
                                 class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 rounded-lg group-hover:opacity-100 opacity-80 transition-opacity duration-300">
                                 <span class="text-white text-sm px-2 py-1 rounded">
                                     Subscribe to view

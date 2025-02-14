@@ -19,6 +19,7 @@
         @livewire('component.content-searchbar')
     </div>
     <section id="allcontent">
+        @livewire('component.content-channel-search')
         @livewire('component.content-video-all',['randomize' => true])
        
 
