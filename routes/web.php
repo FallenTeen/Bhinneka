@@ -46,8 +46,9 @@ Route::middleware(['role:User', 'auth', 'verified'])->group(function () {
     Route::middleware('hasChannel')->group(function () {
         Route::get('/channel/create', \App\Livewire\Channel\Create::class)->name('user.channel.create');
         Route::view('/channel', 'user.channel')->name('user.channel');
-        Route::view('/channel/edit', 'user.channel.edit')->name('user.channel.edit');
-        Route::view('/channel/dashboard', 'user.channel.dashboard')->name('user.channel.dashboard');
+        // Route::view('/channel/edit', 'user.channel.edit')->name('user.channel.edit');
+        // Route::view('/channel/dashboard', 'user.channel.dashboard')->name('user.channel.dashboard');
+        Route::view('/channel/chats', 'user.chat')->name('channel.chat');
 
         Route::get('/channel/content/create', \App\Livewire\Video\VideoContentCreate::class)->name('user.content.create');
     });

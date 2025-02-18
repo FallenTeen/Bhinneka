@@ -1,9 +1,9 @@
 <div class="-mt-3 from-gray-100 to transparent bg-gradient-to-b pb-6">
     <div class="mx-12 pt-6 mb-6">
-        <div class="channel-header flex items-center bg-white p-12 rounded-xl shadow-xl">
+        <div class="channel-header flex lg:flex-row xs:flex-col items-center bg-white p-12 rounded-xl shadow-xl">
             <div class="h-1/6">
                 @if($channel->avatar)
-                    <img src="{{ asset('storage/' . $channel->avatar) }}" class="w-full aspect-square rounded-full object-cover"
+                    <img src="{{ asset('storage/' . $channel->avatar) }}" class="max-h-lg aspect-square rounded-full object-cover"
                         alt="Channel Avatar">
                 @else
                     <img src="{{ asset('storage/avatarsimages/default-avatar.png') }}" alt="Default Avatar"
@@ -11,7 +11,7 @@
                 @endif
             </div>
 
-            <div class="pl-8">
+            <div class="pl-16">
                 <div class="flex items-center gap-8">
                     <h1 class="text-5xl font-extrabold text-gray-900 tracking-tight">{{ $channel->channel_name }}</h1>
                     <div class="text-ungumain">

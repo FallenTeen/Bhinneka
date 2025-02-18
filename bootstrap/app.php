@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\BroadcastServiceProvider;
 use App\Http\Middleware\CheckRole;
 use App\Http\Middleware\RoleRedirect;
 use App\Http\Middleware\HasChannel;

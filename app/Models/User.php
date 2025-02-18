@@ -67,4 +67,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasManyThrough(ContentVideo::class, Channel::class);
     }
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'receiver');
+    }
+
 }

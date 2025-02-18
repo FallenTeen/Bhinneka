@@ -28,12 +28,12 @@
                 </a>
             </div>
             <div class="w-full flex items-center px-8">
-                <div class="w-1/6 rounded-full overflow-hidden">
+                <div class="w-1/6 overflow-hidden">
                     @php
                         $avatar = optional(Auth::user()->channels->first())->avatar;
                     @endphp
                     <img src="{{ asset($avatar ? 'storage/' . $avatar : 'storage/avatarsimages/default-avatar.png') }}"
-                        alt="Avatar" class="w-full h-full object-contain">
+                        alt="Avatar" class="w-full h-full object-cover rounded-full aspect-square ">
                 </div>
 
 
