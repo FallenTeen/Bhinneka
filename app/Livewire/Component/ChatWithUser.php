@@ -35,10 +35,15 @@ class ChatWithUser extends Component
                     'last_message' => Message::where('sender_id', $message->sender_id)
                         ->where('channel_id', $this->channel->id)
                         ->latest()
-                        ->first()?->message ?? ''
+                        ->first()?->message ?? '',
+                    'unread_count' => Message::where('receiver_id', Auth::id())
+                        ->where('sender_id', $message->sender_id)
+                        ->whereNull('read_at')
+                        ->count() // Count unread messages
                 ];
             })
             ->toArray();
+
     }
 
     public function selectUser($userId)
@@ -53,6 +58,11 @@ class ChatWithUser extends Component
             return;
         }
 
+        Message::where('channel_id', $this->channel->id)
+            ->where('receiver_id', Auth::id())
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+
         $this->messages = Message::where('channel_id', $this->channel->id)
             ->where(function ($query) {
                 $query->where('sender_id', $this->selectedUser->id)
@@ -64,7 +74,8 @@ class ChatWithUser extends Component
                 return [
                     'id' => $message->id,
                     'message' => $message->message,
-                    'is_mine' => $message->sender_id === Auth::id()
+                    'is_mine' => $message->sender_id === Auth::id(),
+                    'is_unread' => is_null($message->read_at)
                 ];
             })
             ->toArray();
@@ -76,11 +87,12 @@ class ChatWithUser extends Component
             return;
         }
 
-        Message::create([
+        $message = Message::create([
             'sender_id' => Auth::id(),
             'receiver_id' => $this->selectedUser->id,
             'channel_id' => $this->channel->id,
-            'message' => $this->message
+            'message' => $this->message,
+            'read_at' => null, // Message is unread
         ]);
 
         $this->messages[] = [
@@ -91,6 +103,11 @@ class ChatWithUser extends Component
 
         $this->message = '';
     }
+    public function refreshMessages()
+    {
+        $this->loadMessages();
+    }
+
 
     public function render()
     {

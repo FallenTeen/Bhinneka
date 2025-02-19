@@ -10,13 +10,12 @@
         "guzzlehttp/guzzle": "^7.9",
         "laravel/breeze": "^2.3",
         "laravel/framework": "^11.31",
-        "laravel/reverb": "^1.0",
+        "laravel/reverb": "^1.4",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.6",
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.0",
-        "mews/captcha": "^3.4",
-        "pusher/pusher-php-server": "^7.2"
+        "mews/captcha": "^3.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -64,3 +64,4 @@ document.addEventListener("DOMContentLoaded", function () {
         closeIcon.classList.toggle("hidden");
     });
 });
+

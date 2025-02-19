@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->foreignId('receiver_id')->constrained('users')->onDelete('cascade');
             $table->unsignedBigInteger('channel_id')->nullable();
             $table->foreign('channel_id')->references('id')->on('channels')->onDelete('cascade');
+            $table->timestamp('read_at')->nullable();
             $table->text('message');
             $table->timestamps();
         });

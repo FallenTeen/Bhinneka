@@ -53,7 +53,7 @@
             </div>
 
             <!-- Chat Messages -->
-            <div id="messages-container" class="p-4 h-80 overflow-y-auto flex flex-col-reverse space-y-3">
+            <div wire:poll.2s="refreshMessages" id="messages-container" class="p-4 h-80 overflow-y-auto flex flex-col-reverse space-y-3">
                 @foreach($messages as $msg)
                     <div class="message {{ $msg['sender_id'] === Auth::id() ? 'sent' : 'received' }}">
                         <div class="flex {{ $msg['sender_id'] === Auth::id() ? 'justify-end' : 'justify-start' }}">

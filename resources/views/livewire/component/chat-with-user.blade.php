@@ -6,9 +6,12 @@
             @if ($chatUser['id'] != Auth::id())
                 <div wire:click="selectUser({{ $chatUser['id'] }})"
                     class="flex px-4 py-2 border-b cursor-pointer hover:bg-gray-100 
-                                                    {{ isset($selectedUser) && $selectedUser->id === $chatUser['id'] ? 'bg-gray-100' : '' }}">
+                                                                {{ isset($selectedUser) && $selectedUser->id === $chatUser['id'] ? 'bg-gray-100' : '' }}">
                     <div class="w-12 h-12 aspect-square bg-gray-300 rounded-full flex items-center justify-center">
                         <span class="text-lg font-semibold text-gray-600">{{ $chatUser['initials'] }}</span>
+                        @if($chatUser['unread_count'] > 0)
+                            <div class="absolute top-0 right-0 h-3 w-3 bg-red-500 rounded-full"></div>
+                        @endif
                     </div>
                     <div class="flex flex-col ml-4">
                         <span class="font-bold line-clamp-1">{{ $chatUser['name'] }}</span>
@@ -17,6 +20,7 @@
                 </div>
             @endif
         @endforeach
+
     </div>
 
     <!-- ISI CHAT -->
@@ -25,11 +29,12 @@
             <div class="p-4 bg-ungumain text-white flex justify-between items-center">
                 <h3 class="text-lg font-semibold">{{ $selectedUser->name }}</h3>
             </div>
-            <div class="flex-1 p-4 space-y-4 max-h-[400px] overflow-y-auto" id="messageContainer">
+            <div wire:poll.2s="refreshMessages" class="flex-1 p-4 space-y-4 max-h-[400px] overflow-y-auto"
+                id="messageContainer">
                 @foreach($messages as $msg)
                     <div class="mb-2 {{ $msg['is_mine'] ? 'text-right' : 'text-left' }}">
                         <p class="{{ $msg['is_mine'] ? 'bg-ungumain text-white' : 'bg-gray-200 text-gray-700' }} 
-                                            rounded-lg py-2 px-4 inline-block">
+                                                                            rounded-lg py-2 px-4 inline-block">
                             {{ $msg['message'] }}
                         </p>
                     </div>
@@ -37,16 +42,32 @@
             </div>
 
             <script>
-                document.addEventListener('livewire:load', () => {
-                    const messageContainer = document.getElementById('messageContainer');
-                    messageContainer.scrollTop = messageContainer.scrollHeight;
-                });
+                document.addEventListener('DOMContentLoaded', function () {
+                    const messagesContainer = document.getElementById('messageContainer');
 
-                Livewire.on('messageSent', () => {
-                    const messageContainer = document.getElementById('messageContainer');
-                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                    const scrollToBottom = () => {
+                        if (messagesContainer) {
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }
+                    };
+
+                    // Scroll saat halaman pertama kali dimuat
+                    scrollToBottom();
+
+                    // Scroll saat komponen diperbarui
+                    Livewire.hook('message.processed', (message, component) => {
+                        scrollToBottom();
+                    });
+
+                    // Scroll saat pesan dikirim
+                    Livewire.on('messageSent', () => {
+                        setTimeout(() => {
+                            scrollToBottom();
+                        }, 100);
+                    });
                 });
             </script>
+
 
             <div class="p-4 border-t flex">
                 <input type="text" wire:model.defer="message" wire:keydown.enter="sendMessage"

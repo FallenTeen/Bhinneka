@@ -55,6 +55,20 @@ class ChatWithChannel extends Component
 
         $this->message = '';
     }
+    public function refreshMessages()
+    {
+        $messages = $this->channel->messages()->with('sender')->latest()->get();
+        $this->messages = $messages->map(function ($msg) {
+            return [
+                'id' => $msg->id,
+                'sender_id' => $msg->sender_id,
+                'message' => $msg->message,
+                'sender_name' => $msg->sender->name
+            ];
+        })->toArray();
+    }
+
+
 
     public function render()
     {
