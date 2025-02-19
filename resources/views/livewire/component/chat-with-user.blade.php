@@ -4,7 +4,7 @@
         <div class="p-4 font-bold text-xl">Chats</div>
         @foreach($users as $chatUser)
             @if ($chatUser['id'] != Auth::id())
-                <div wire:click="selectUser({{ $chatUser['id'] }})"
+                <div wire:poll.2s="refreshLastMessage" wire:click="selectUser({{ $chatUser['id'] }})"
                     class="flex px-4 py-2 border-b cursor-pointer hover:bg-gray-100 
                                                                 {{ isset($selectedUser) && $selectedUser->id === $chatUser['id'] ? 'bg-gray-100' : '' }}">
                     <div class="w-12 h-12 aspect-square bg-gray-300 rounded-full flex items-center justify-center">

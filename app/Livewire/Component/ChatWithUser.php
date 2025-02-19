@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class ChatWithUser extends Component
 {
     public $user;
+    public $last_message = '';
     public $message = '';
     public $selectedUser;
     public $messages = [];
@@ -39,7 +40,7 @@ class ChatWithUser extends Component
                     'unread_count' => Message::where('receiver_id', Auth::id())
                         ->where('sender_id', $message->sender_id)
                         ->whereNull('read_at')
-                        ->count() // Count unread messages
+                        ->count()
                 ];
             })
             ->toArray();
@@ -107,7 +108,15 @@ class ChatWithUser extends Component
     {
         $this->loadMessages();
     }
-
+    public function refreshLastMessage()
+    {
+        foreach ($this->users as &$user) {
+            $user['last_message'] = Message::where('sender_id', $user['id'])
+                ->where('channel_id', $this->channel->id)
+                ->latest()
+                ->first()?->message ?? '';
+        }
+    }
 
     public function render()
     {
