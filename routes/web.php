@@ -6,7 +6,10 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Request;
 use Livewire\Livewire;
 use Mews\Captcha\Facades\Captcha;
+use Illuminate\Support\Facades\Broadcast;
 
+
+Broadcast::routes(['middleware' => ['web', 'auth']]);
 
 Route::get('/logout', function () {
     Auth::logout();

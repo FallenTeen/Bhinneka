@@ -6,68 +6,148 @@ use Livewire\Component;
 use App\Models\User;
 use App\Models\Message;
 use App\Models\Channel;
+use App\Events\MessageSent;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
+use Illuminate\Support\Facades\Broadcast;
 
 class ChatWithUser extends Component
 {
     public $user;
-    public $last_message = '';
-    public $message = '';
     public $selectedUser;
+    public $message = '';
     public $messages = [];
     public $users = [];
     public $channel;
 
+    protected $rules = [
+        'message' => 'required|string|max:1000',
+    ];
+
+    public function getListeners()
+    {
+        if ($this->channel) {
+            return [
+                "echo-private:chat.{$this->channel->id},MessageSent" => 'handleNewMessage',
+            ];
+        }
+        return [];
+    }
+
+    public function handleNewMessage($event)
+    {
+        if (
+            $this->selectedUser &&
+            ($event['sender_id'] === $this->selectedUser->id || $event['receiver_id'] === $this->selectedUser->id)
+        ) {
+            $this->messages[] = [
+                'id' => $event['id'],
+                'message' => $event['message'],
+                'is_mine' => $event['sender_id'] === auth()->id(),
+                'created_at' => $event['created_at'],
+                'read_at' => null
+            ];
+
+            if ($event['sender_id'] === $this->selectedUser->id) {
+                Message::where('id', $event['id'])->update(['read_at' => now()]);
+            }
+
+            $this->loadMessages();
+            $this->loadUsers();
+        } else {
+            $this->loadUsers();
+        }
+    }
 
     public function mount()
     {
         $this->channel = Channel::where('user_id', Auth::id())->first();
+        $this->loadUsers();
+    }
 
-        $this->users = Message::where('channel_id', $this->channel->id)
-            ->with('sender')
-            ->select('sender_id')
-            ->distinct()
+    #[On('messageSent')]
+    public function loadUsers()
+    {
+        $userIds = Message::where('channel_id', $this->channel->id)
+            ->where(function ($query) {
+                $query->where('sender_id', '!=', Auth::id())
+                    ->orWhere('receiver_id', '!=', Auth::id());
+            })
+            ->pluck('sender_id')
+            ->merge(Message::where('channel_id', $this->channel->id)
+                ->pluck('receiver_id'))
+            ->unique()
+            ->filter(function ($id) {
+                return $id !== Auth::id();
+            });
+
+        $this->users = User::whereIn('id', $userIds)
             ->get()
-            ->map(function ($message) {
+            ->map(function ($user) {
+                $lastMessage = Message::where('channel_id', $this->channel->id)
+                    ->where(function ($query) use ($user) {
+                        $query->where(function ($q) use ($user) {
+                            $q->where('sender_id', $user->id)
+                                ->where('receiver_id', Auth::id());
+                        })->orWhere(function ($q) use ($user) {
+                            $q->where('sender_id', Auth::id())
+                                ->where('receiver_id', $user->id);
+                        });
+                    })
+                    ->latest()
+                    ->first();
+
+                $unreadCount = Message::where('channel_id', $this->channel->id)
+                    ->where('sender_id', $user->id)
+                    ->where('receiver_id', Auth::id())
+                    ->whereNull('read_at')
+                    ->count();
+
                 return [
-                    'id' => $message->sender->id,
-                    'name' => $message->sender->name,
-                    'initials' => strtoupper(substr($message->sender->name, 0, 2)),
-                    'last_message' => Message::where('sender_id', $message->sender_id)
-                        ->where('channel_id', $this->channel->id)
-                        ->latest()
-                        ->first()?->message ?? '',
-                    'unread_count' => Message::where('receiver_id', Auth::id())
-                        ->where('sender_id', $message->sender_id)
-                        ->whereNull('read_at')
-                        ->count()
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'initials' => strtoupper(substr($user->name, 0, 2)),
+                    'last_message' => $lastMessage?->message ?? '',
+                    'last_message_time' => $lastMessage?->created_at ?? null,
+                    'unread_count' => $unreadCount
                 ];
             })
+            ->sortByDesc('last_message_time')
+            ->values()
             ->toArray();
-
     }
 
     public function selectUser($userId)
     {
         $this->selectedUser = User::find($userId);
-        $this->loadMessages();
-    }
-
-    public function loadMessages()
-    {
-        if (!$this->selectedUser) {
-            return;
-        }
-
         Message::where('channel_id', $this->channel->id)
+            ->where('sender_id', $userId)
             ->where('receiver_id', Auth::id())
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
 
+        $this->loadMessages();
+        $this->loadUsers();
+        $this->dispatch('userSelected');
+    }
+
+    #[On('messageSent')]
+    public function loadMessages()
+    {
+        if (!$this->selectedUser) {
+            $this->messages = [];
+            return;
+        }
+
         $this->messages = Message::where('channel_id', $this->channel->id)
             ->where(function ($query) {
-                $query->where('sender_id', $this->selectedUser->id)
-                    ->orWhere('sender_id', Auth::id());
+                $query->where(function ($q) {
+                    $q->where('sender_id', $this->selectedUser->id)
+                        ->where('receiver_id', Auth::id());
+                })->orWhere(function ($q) {
+                    $q->where('sender_id', Auth::id())
+                        ->where('receiver_id', $this->selectedUser->id);
+                });
             })
             ->orderBy('created_at', 'asc')
             ->get()
@@ -76,11 +156,13 @@ class ChatWithUser extends Component
                     'id' => $message->id,
                     'message' => $message->message,
                     'is_mine' => $message->sender_id === Auth::id(),
-                    'is_unread' => is_null($message->read_at)
+                    'created_at' => $message->created_at,
+                    'read_at' => $message->read_at
                 ];
             })
             ->toArray();
     }
+
 
     public function sendMessage()
     {
@@ -88,34 +170,31 @@ class ChatWithUser extends Component
             return;
         }
 
-        $message = Message::create([
+        $this->validate();
+
+        $newMessage = Message::create([
+            'channel_id' => $this->channel->id,
             'sender_id' => Auth::id(),
             'receiver_id' => $this->selectedUser->id,
-            'channel_id' => $this->channel->id,
             'message' => $this->message,
-            'read_at' => null, // Message is unread
+            'created_at' => now(),
         ]);
 
+        // Use only one broadcast method
+        broadcast(new MessageSent($newMessage))->toOthers();
+
         $this->messages[] = [
-            'id' => uniqid(),
-            'message' => $this->message,
-            'is_mine' => true
+            'id' => $newMessage->id,
+            'message' => $newMessage->message,
+            'is_mine' => true,
+            'created_at' => $newMessage->created_at,
+            'read_at' => null
         ];
 
         $this->message = '';
-    }
-    public function refreshMessages()
-    {
         $this->loadMessages();
-    }
-    public function refreshLastMessage()
-    {
-        foreach ($this->users as &$user) {
-            $user['last_message'] = Message::where('sender_id', $user['id'])
-                ->where('channel_id', $this->channel->id)
-                ->latest()
-                ->first()?->message ?? '';
-        }
+        $this->loadUsers();
+        $this->dispatch('messageSent');
     }
 
     public function render()
