@@ -51,7 +51,11 @@ class Create extends Component
             'verified' => false,
         ]);
 
-        return redirect()->route('user.channel');
+        $user = Auth::user();
+        $user->role_id = 3;
+        $user->save();
+
+        return redirect()->route('creator.channel');
     }
     public function render()
     {

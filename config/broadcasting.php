@@ -32,16 +32,19 @@ return [
 
         'reverb' => [
             'driver' => 'reverb',
-            'app_id' => env('REVERB_APP_ID', 'your_app_id'),
-            'key' => env('REVERB_APP_KEY', 'your_app_key'),
-            'secret' => env('REVERB_APP_SECRET', 'your_app_secret'),
-            'hostname' => env('REVERB_HOST', '127.0.0.1'),
-            'port' => env('REVERB_PORT', 8080),
-            'scheme' => env('REVERB_SCHEME', 'http'), // Switch to http
-            'debug' => env('REVERB_DEBUG', false),
+            'key' => env('REVERB_APP_KEY'),
+            'secret' => env('REVERB_APP_SECRET'),
+            'app_id' => env('REVERB_APP_ID'),
+            'options' => [
+                'host' => env('REVERB_HOST'),
+                'port' => env('REVERB_PORT', 443),
+                'scheme' => env('REVERB_SCHEME', 'https'),
+                'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
+            ],
+            'client_options' => [
+                // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
+            ],
         ],
-
-
 
         'pusher' => [
             'driver' => 'pusher',
@@ -50,18 +53,16 @@ return [
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
-                'useTLS' => false,              // Disable TLS
-                'encrypted' => false,           // Avoid SSL encryption
-                'scheme' => 'http',             // Force HTTP
-                'host' => env('PUSHER_HOST', '127.0.0.1'),
-                'port' => env('PUSHER_PORT', 8080),
-                'curl_options' => [
-                    CURLOPT_SSL_VERIFYHOST => 0, // Disable SSL verification
-                    CURLOPT_SSL_VERIFYPEER => 0, // Disable SSL verification
-                ],
+                'host' => env('PUSHER_HOST') ?: 'api-'.env('PUSHER_APP_CLUSTER', 'mt1').'.pusher.com',
+                'port' => env('PUSHER_PORT', 443),
+                'scheme' => env('PUSHER_SCHEME', 'https'),
+                'encrypted' => true,
+                'useTLS' => env('PUSHER_SCHEME', 'https') === 'https',
+            ],
+            'client_options' => [
+                // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
             ],
         ],
-
 
         'ably' => [
             'driver' => 'ably',

@@ -8,8 +8,8 @@ use Livewire\Livewire;
 use Mews\Captcha\Facades\Captcha;
 use Illuminate\Support\Facades\Broadcast;
 
-
 Broadcast::routes(['middleware' => ['web', 'auth']]);
+
 
 Route::get('/logout', function () {
     Auth::logout();
@@ -46,25 +46,23 @@ Route::middleware(['role:Admin', 'auth', 'verified'])->group(function () {
 
 // User
 Route::middleware(['role:User', 'auth', 'verified'])->group(function () {
-    Route::middleware('hasChannel')->group(function () {
-        Route::get('/channel/create', \App\Livewire\Channel\Create::class)->name('user.channel.create');
-        Route::view('/channel', 'user.channel')->name('user.channel');
-        // Route::view('/channel/edit', 'user.channel.edit')->name('user.channel.edit');
-        // Route::view('/channel/dashboard', 'user.channel.dashboard')->name('user.channel.dashboard');
-        Route::view('/channel/chats', 'user.chat')->name('channel.chat');
-
-        Route::get('/channel/content/create', \App\Livewire\Video\VideoContentCreate::class)->name('user.content.create');
-    });
-
     Route::view('/user/dashboard', 'user.dashboard')->name('user.dashboard');
+    Route::middleware(['hasChannel'])->group(function () {
+        Route::get('/channel/create', \App\Livewire\Channel\Create::class)->name('user.channel.create');
+    });
 });
 
-
-
-
 // Creator
-Route::middleware(['role:Creator', 'auth', 'verified'])->group(function () {
+Route::middleware(['role:Creator', 'hasChannel', 'auth', 'verified'])->group(function () {
     Route::view('/creator/dashboard', 'creator.dashboard')->name('creator.dashboard');
+
+    Route::view('/channel', 'creator.channel')->name('creator.channel');
+    Route::view('/channel/chats', 'creator.chat')->name('channel.chat');
+    // Route::view('/channel/edit', 'user.channel.edit')->name('user.channel.edit');
+    // Route::view('/channel/dashboard', 'user.channel.dashboard')->name('user.channel.dashboard');
+
+
+    Route::get('/channel/content/create', \App\Livewire\Video\VideoContentCreate::class)->name('creator.content.create');
 });
 
 // Investor

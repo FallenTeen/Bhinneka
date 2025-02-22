@@ -12,7 +12,7 @@
         <div class="w-full bg-white p-6 flex flex-col col-span-2 shadow-lg">
             <div class="w-full flex justify-between">
                 <span class="text-lg font-bold mb-3">Channel Information</span>
-                <a href="{{ route('user.content.create') }}"
+                <a href="{{ route('creator.channel') }}"
                     class="rounded-lg relative w-36 h-10 cursor-pointer flex items-center border border-ungumain bg-ungumain group hover:bg-ungumain active:bg-ungumain active:border-ungumain">
                     <span
                         class="text-gray-200 font-semibold  mx-4 transform group-hover:translate-x-20 transition-all duration-300">Edit
@@ -53,7 +53,7 @@
             <div class="w-full">
                 <div class="w-full flex justify-between">
                     <span class="text-lg font-bold mb-3">Content</span>
-                    <a href="{{ route('user.content.create') }}"
+                    <a href="{{ route('creator.content.create') }}"
                         class="rounded-lg relative w-36 h-10 cursor-pointer flex items-center border border-ungumain bg-ungumain group hover:bg-ungumain active:bg-ungumain active:border-ungumain">
                         <span
                             class="text-gray-200 font-semibold  mx-4 transform group-hover:translate-x-20 transition-all duration-300">Add

@@ -52,7 +52,7 @@ class VideoContentCreate extends Component
         ]);
 
         session()->flash('message', 'Video berhasil ditambahkan!');
-        return redirect()->route('user.channel');
+        return redirect()->route('creator.channel');
     }
 
     public function render()

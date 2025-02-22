@@ -20,6 +20,7 @@
     "dependencies": {
         "20": "^1.0.0",
         "22": "^0.0.0",
+        "@vitejs/plugin-vue": "^5.2.1",
         "aos": "^2.3.4",
         "dropify": "^0.2.2",
         "socket.io-client": "^4.8.1"

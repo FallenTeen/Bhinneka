@@ -21,13 +21,5 @@ class Message extends Model
     {
         return $this->belongsTo(Channel::class, 'channel_id');
     }
-    public function broadcastOn()
-    {
-        return ['chat-channel.' . $this->channel_id];
-    }
 
-    public function broadcastAs()
-    {
-        return 'message.sent';
-    }
 }

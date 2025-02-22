@@ -18,7 +18,7 @@ class HasChannel
             }
         }
         if ($request->is('channel/create') && $user->channels()->exists()) {
-            return redirect()->route('user.channel');
+            return redirect()->route('creator.channel');
         }
         return $next($request);
     }

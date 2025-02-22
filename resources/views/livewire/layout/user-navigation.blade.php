@@ -30,7 +30,7 @@ new class extends Component {
             </svg>
 
             <div class="transform ease-in-out duration-300">
-                Hi, {{Auth::user()->username}}
+                Hi, {{Auth::user()->name}}
             </div>
         </div>
     </div>
@@ -45,9 +45,9 @@ new class extends Component {
     <!-- MAX SIDEBAR-->
     <div class="max hidden text-white mt-16 flex-col space-y-2 w-full h-[calc(100vh)]">
         <div class="flex flex-col w-full px-6 rounded-full transform ease-in-out duration-300">
-            <div class="px-4">
+            <div class="flex flex-row items-center gap-4">
                 @if (Auth::check() && Auth::user()->channels->isNotEmpty())
-                    <a href="{{route('user.channel')}}" class="flex flex-row items-center gap-4">
+                    <a href="{{route('creator.channel')}}" class="flex flex-row items-center gap-4">
                         @if (Auth::user()->channels->first()->verified)
                             <div class="text-blue-400 pl-4 border-2 border-transparent mt-2 mb-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -74,60 +74,18 @@ new class extends Component {
                     </a>
                 @endif
             </div>
-
         </div>
-        <a href="{{route('user.dashboard')}}"
-            class="border-2 px-4 py-2 mx-6 rounded-lg flex flex-row items-center space-x-3 transform ease-in-out duration-300
-            {{ request()->routeIs('user.dashboard') ? 'border-white text-white hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' : 'border-transparent hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' }} bg-[#1E293B]">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-            </svg>
-            <div>Home</div>
-        </a>
-        @if (Auth::check() && Auth::user()->channels->isNotEmpty())
-            <a href="{{route('channel.chat')}}"
-                class="border-2 px-4 py-2 mx-6 rounded-lg flex flex-row items-center space-x-3 transform ease-in-out duration-300
-                                    {{ request()->routeIs('channel.chat') ? 'border-white text-white hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' : 'border-transparent hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' }} bg-[#1E293B]">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                </svg>
-                <div>Chats</div>
-            </a>
-        @endif
-
     </div>
     <!-- MINI SIDEBAR-->
-    <div class="mini mt-[calc(4rem+4px)] flex flex-col space-y-2 w-full h-[calc(100vh)]">
+    <div class="mini mt-16 flex flex-col space-y-2 w-full h-[calc(100vh)]">
         <div onclick="openNav()"
-            class="border-2 border-transparent hover:ml-4 justify-end pr-5 text-gray-200 hover:text-purple-500 dark:hover:text-blue-500 w-full bg-[#1E293B] p-2 rounded-full transform ease-in-out duration-300 flex">
+            class="hover:ml-4 justify-end pr-5 text-white hover:text-purple-500 dark:hover:text-blue-500 w-full bg-[#1E293B] p-3 rounded-full transform ease-in-out duration-300 flex">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
-                stroke="currentColor" class="size-4">
+                stroke="currentColor" class="size-5">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M9.348 14.652a3.75 3.75 0 0 1 0-5.304m5.304 0a3.75 3.75 0 0 1 0 5.304m-7.425 2.121a6.75 6.75 0 0 1 0-9.546m9.546 0a6.75 6.75 0 0 1 0 9.546M5.106 18.894c-3.808-3.807-3.808-9.98 0-13.788m13.788 0c3.808 3.807 3.808 9.98 0 13.788M12 12h.008v.008H12V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
             </svg>
         </div>
-        <div onclick="openNav()"
-            class="border-2 border-transparent hover:ml-4 justify-end pr-5 text-gray-200 hover:text-purple-500 dark:hover:text-blue-500 w-full bg-[#1E293B] p-2 rounded-full transform ease-in-out duration-300 flex">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1}
-                stroke="currentColor" class="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round"
-                    d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-            </svg>
-        </div>
-        @if (Auth::check() && Auth::user()->channels->isNotEmpty())
-            <div onclick="openNav()"
-                class="border-2 border-transparent hover:ml-4 justify-end pr-5 text-gray-200 hover:text-purple-500 dark:hover:text-blue-500 w-full bg-[#1E293B] p-2 rounded-full transform ease-in-out duration-300 flex">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                </svg>
-            </div>
-        @endif
     </div>
 
 </aside>
