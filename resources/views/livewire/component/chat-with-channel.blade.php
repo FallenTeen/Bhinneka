@@ -1,6 +1,6 @@
 <div x-data="{ isChatboxOpen: false }" class="fixed bottom-0 right-0">
     <!-- Chat Toggle Button -->
-    <button @click="isChatboxOpen = !isChatboxOpen"
+    <button @click="isChatboxOpen = !isChatboxOpen; if (isChatboxOpen) $nextTick(() => $refs.messageInput.focus())"
         class="bg-ungumain text-white px-4 py-2 rounded-t-lg flex items-center space-x-2 mb-4 mr-4">
         <div :class="{'rotate-45': isChatboxOpen, 'rotate-0': !isChatboxOpen}"
             class="transform transition-transform duration-300">
@@ -72,12 +72,13 @@
         <!-- Input -->
         <div class="p-4 border-t">
             <div class="flex space-x-2">
-                <input 
-                    type="text" 
-                    wire:model.debounce.300ms="message"
+            <input type="text" 
+                    x-ref="messageInput"
+                    wire:model.debounce.100ms="message"
                     wire:keydown.enter="sendMessage"
                     class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-ungumain"
                     placeholder="Type a message...">
+
                 <button 
                     wire:click="sendMessage"
                     class="bg-ungumain text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
@@ -91,7 +92,7 @@
 <script>
 document.addEventListener('livewire:initialized', () => {
     const container = document.getElementById('messages-container');
-    
+
     const scrollToBottom = () => {
         if (container) {
             container.scrollTop = container.scrollHeight;
@@ -99,6 +100,7 @@ document.addEventListener('livewire:initialized', () => {
     };
 
     scrollToBottom();
+
     Livewire.on('refreshMessages', () => {
         setTimeout(scrollToBottom, 100);
     });
@@ -106,6 +108,15 @@ document.addEventListener('livewire:initialized', () => {
     Livewire.on('messageSent', () => {
         setTimeout(scrollToBottom, 100);
     });
+
+    Livewire.on('messageSent', () => {
+        setTimeout(scrollToBottom, 100);
+    });
+
+    Livewire.on('handleMessageSent', () => {
+        setTimeout(scrollToBottom, 100);
+    });
+
     const observer = new MutationObserver(scrollToBottom);
     observer.observe(container, { childList: true, subtree: true });
 });

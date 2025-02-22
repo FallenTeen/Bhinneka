@@ -38,7 +38,6 @@ class ChatWithUser extends Component
             $payload = json_decode($payload, true);
         }
 
-        // Hanya proses pesan jika user yang dipilih adalah pengirim pesan
         if ($this->selectedUser && $payload['sender_id'] === $this->selectedUser->id) {
             $this->messages[] = [
                 'id' => $payload['id'],

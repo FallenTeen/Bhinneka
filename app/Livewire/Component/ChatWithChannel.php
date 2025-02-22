@@ -7,6 +7,7 @@ use App\Events\UserTyping;
 use App\Models\Channel;
 use App\Models\Message;
 use Livewire\Component;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 
 class ChatWithChannel extends Component
@@ -110,11 +111,12 @@ class ChatWithChannel extends Component
         $this->messages[] = $messageData;
 
         event(new MessageSent($newMessage));
-        event(new UserTyping($this->channel->id, Auth::id(), Auth::user()->name, false));
-
         $this->message = '';
         $this->dispatch('messageSent');
+        $cacheKey = "user_typing_{$this->channel->id}_" . Auth::id();
+        Cache::forget($cacheKey);
     }
+
     public function handleUserTyping($payload)
     {
         if (is_string($payload)) {
@@ -132,31 +134,22 @@ class ChatWithChannel extends Component
             }
         }
     }
+
     public function updatedMessage($value)
     {
         if ($this->channel) {
-            $now = now();
-            if (!isset($this->lastTypingEvent) || $now->diffInMilliseconds($this->lastTypingEvent) > 1000) {
-                event(new UserTyping(
-                    $this->channel->id,
-                    Auth::id(),
-                    Auth::user()->name,
-                    !empty($value)
-                ));
-                $this->lastTypingEvent = $now;
+            $cacheKey = "user_typing_{$this->channel->id}_" . Auth::id();
+            if (strlen($value) >= 2 || empty($value)) {
+                if (!Cache::has($cacheKey)) {
+                    event(new UserTyping(
+                        $this->channel->id,
+                        Auth::id(),
+                        Auth::user()->name,
+                        !empty($value)
+                    ));
+                    Cache::put($cacheKey, true, now()->addSeconds(2));
+                }
             }
-        }
-    }
-
-    public function dehydrate()
-    {
-        if ($this->channel) {
-            event(new UserTyping(
-                $this->channel->id,
-                Auth::id(),
-                Auth::user()->name,
-                false
-            ));
         }
     }
 
