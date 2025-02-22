@@ -4,7 +4,6 @@ namespace App\Livewire\Component;
 
 use App\Events\MessageSent;
 use App\Events\UserTyping;
-use App\Events\MessageRead;
 use App\Models\Channel;
 use App\Models\Message;
 use Livewire\Component;
@@ -27,7 +26,6 @@ class ChatWithChannel extends Component
         return [
             "echo-private:chat.{$this->channel->id},MessageSent" => 'handleMessageSent',
             "echo-private:chat.{$this->channel->id},UserTyping" => 'handleUserTyping',
-            "echo-private:chat.{$this->channel->id},MessageRead" => 'handleMessageRead',
             'refreshMessages' => '$refresh'
         ];
     }
@@ -59,14 +57,6 @@ class ChatWithChannel extends Component
             ];
         })->toArray();
 
-        // Mark messages as read
-        Message::where('channel_id', $this->channel->id)
-            ->where('receiver_id', Auth::id())
-            ->whereNull('read_at')
-            ->each(function ($message) {
-                $message->update(['read_at' => now()]);
-                event(new MessageRead($message->id, $this->channel->id, Auth::id()));
-            });
     }
 
     public function handleMessageSent($payload)
@@ -83,13 +73,6 @@ class ChatWithChannel extends Component
             'created_at' => $payload['created_at'], 
             'is_mine' => $payload['sender_id'] === Auth::id()
         ];
-        if ($payload['sender_id'] !== Auth::id()) {
-            $message = Message::find($payload['id']);
-            if ($message) {
-                $message->update(['read_at' => now()]);
-                event(new MessageRead($message->id, $this->channel->id, Auth::id()));
-            }
-        }
 
         $this->dispatch('messageSent');
     }
@@ -110,21 +93,6 @@ class ChatWithChannel extends Component
             }
         }
     }
-
-    public function handleMessageRead($payload)
-    {
-        if (is_string($payload)) {
-            $payload = json_decode($payload, true);
-        }
-
-        foreach ($this->messages as &$message) {
-            if ($message['id'] == $payload['messageId']) {
-                $message['read_at'] = now();
-                break;
-            }
-        }
-    }
-
     public function updatedMessage($value)
     {
         if ($this->channel) {

@@ -4,9 +4,9 @@
         <div class="p-4 font-bold text-xl">Chats</div>
         @foreach($users as $chatUser)
             @if ($chatUser['id'] != Auth::id())
-                <div wire:poll.2s="refreshLastMessage" wire:click="selectUser({{ $chatUser['id'] }})"
+                <div wire:click="selectUser({{ $chatUser['id'] }})"
                     class="flex px-4 py-2 border-b cursor-pointer hover:bg-gray-100 
-                                                                {{ isset($selectedUser) && $selectedUser->id === $chatUser['id'] ? 'bg-gray-100' : '' }}">
+                                                                                {{ isset($selectedUser) && $selectedUser->id === $chatUser['id'] ? 'bg-gray-100' : '' }}">
                     <div class="w-12 h-12 aspect-square bg-gray-300 rounded-full flex items-center justify-center">
                         <span class="text-lg font-semibold text-gray-600">{{ $chatUser['initials'] }}</span>
                         @if($chatUser['unread_count'] > 0)
@@ -29,12 +29,11 @@
             <div class="p-4 bg-ungumain text-white flex justify-between items-center">
                 <h3 class="text-lg font-semibold">{{ $selectedUser->name }}</h3>
             </div>
-            <div wire:poll.2s="refreshMessages" class="flex-1 p-4 space-y-4 max-h-[400px] overflow-y-auto"
-                id="messageContainer">
+            <div class="flex-1 p-4 space-y-4 max-h-[400px] overflow-y-auto" id="messageContainer">
                 @foreach($messages as $msg)
                     <div class="mb-2 {{ $msg['is_mine'] ? 'text-right' : 'text-left' }}">
                         <p class="{{ $msg['is_mine'] ? 'bg-ungumain text-white' : 'bg-gray-200 text-gray-700' }} 
-                                                                            rounded-lg py-2 px-4 inline-block">
+                                                                                            rounded-lg py-2 px-4 inline-block">
                             {{ $msg['message'] }}
                         </p>
                     </div>
@@ -51,9 +50,30 @@
                         }
                     };
                     scrollToBottom();
+
+                    // Add Echo listener for real-time messages
+                    @if(isset($selectedUser) && isset($channel))
+                        Echo.private(`chat.${@json($channel->id)}`)
+                            .listen('MessageSent', (e) => {
+                                // Only process messages from the selected user
+                                if (e.message.sender_id === @json($selectedUser->id)) {
+                                    const messageDiv = document.createElement('div');
+                                    messageDiv.className = 'mb-2 text-left';
+                                    messageDiv.innerHTML = `
+                                <p class="bg-gray-200 text-gray-700 rounded-lg py-2 px-4 inline-block">
+                                    ${e.message.message}
+                                </p>`;
+                                    messagesContainer.appendChild(messageDiv);
+                                    scrollToBottom();
+                                    Livewire.dispatch('refreshMessages');
+                                }
+                            });
+                    @endif
+
                     Livewire.hook('message.processed', (message, component) => {
                         scrollToBottom();
                     });
+
                     Livewire.on('messageSent', () => {
                         setTimeout(() => {
                             scrollToBottom();
