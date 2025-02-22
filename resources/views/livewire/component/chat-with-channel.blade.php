@@ -74,7 +74,7 @@
             <div class="flex space-x-2">
                 <input 
                     type="text" 
-                    wire:model.live="message"
+                    wire:model.debounce.300ms="message"
                     wire:keydown.enter="sendMessage"
                     class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-ungumain"
                     placeholder="Type a message...">

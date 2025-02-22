@@ -42,7 +42,7 @@ class ChatWithChannel extends Component
     {
         $messages = $this->channel->messages()
             ->with('sender')
-            ->orderBy('created_at', 'asc') 
+            ->orderBy('created_at', 'asc')
             ->get();
 
         $this->messages = $messages->map(function ($msg) {
@@ -51,12 +51,11 @@ class ChatWithChannel extends Component
                 'sender_id' => $msg->sender_id,
                 'message' => $msg->message,
                 'sender_name' => $msg->sender->name,
+                'created_at' => $msg->created_at,
                 'read_at' => $msg->read_at,
-                'created_at' => $msg->created_at->format('H:i'),
                 'is_mine' => $msg->sender_id === Auth::id()
             ];
         })->toArray();
-
     }
 
     public function handleMessageSent($payload)
@@ -64,16 +63,56 @@ class ChatWithChannel extends Component
         if (is_string($payload)) {
             $payload = json_decode($payload, true);
         }
-        $this->messages[] = [
-            'id' => $payload['id'],
-            'sender_id' => $payload['sender_id'],
-            'message' => $payload['message'],
-            'sender_name' => $payload['sender_name'],
-            'read_at' => $payload['read_at'],
-            'created_at' => $payload['created_at'], 
-            'is_mine' => $payload['sender_id'] === Auth::id()
+
+        if ($payload['sender_id'] !== Auth::id()) {
+            $this->messages[] = [
+                'id' => $payload['id'],
+                'sender_id' => $payload['sender_id'],
+                'message' => $payload['message'],
+                'sender_name' => $payload['sender_name'],
+                'created_at' => $payload['created_at'],
+                'read_at' => $payload['read_at'],
+                'is_mine' => false
+            ];
+
+            Message::where('id', $payload['id'])
+                ->update(['read_at' => now()]);
+
+            $this->dispatch('messageSent');
+        }
+    }
+
+    public function sendMessage()
+    {
+        $this->validate([
+            'message' => 'required|string|max:1000',
+        ]);
+
+        $newMessage = Message::create([
+            'sender_id' => Auth::id(),
+            'receiver_id' => $this->channel->user->id,
+            'message' => $this->message,
+            'channel_id' => $this->channel->id,
+            'read_at' => null
+        ]);
+
+        $newMessage->load('sender');
+        $messageData = [
+            'id' => $newMessage->id,
+            'sender_id' => Auth::id(),
+            'message' => $this->message,
+            'sender_name' => Auth::user()->name,
+            'created_at' => now()->format('H:i'),
+            'read_at' => null,
+            'is_mine' => true
         ];
 
+        $this->messages[] = $messageData;
+
+        event(new MessageSent($newMessage));
+        event(new UserTyping($this->channel->id, Auth::id(), Auth::user()->name, false));
+
+        $this->message = '';
         $this->dispatch('messageSent');
     }
     public function handleUserTyping($payload)
@@ -96,46 +135,29 @@ class ChatWithChannel extends Component
     public function updatedMessage($value)
     {
         if ($this->channel) {
+            $now = now();
+            if (!isset($this->lastTypingEvent) || $now->diffInMilliseconds($this->lastTypingEvent) > 1000) {
+                event(new UserTyping(
+                    $this->channel->id,
+                    Auth::id(),
+                    Auth::user()->name,
+                    !empty($value)
+                ));
+                $this->lastTypingEvent = $now;
+            }
+        }
+    }
+
+    public function dehydrate()
+    {
+        if ($this->channel) {
             event(new UserTyping(
                 $this->channel->id,
                 Auth::id(),
                 Auth::user()->name,
-                !empty($value)
+                false
             ));
         }
-    }
-
-    public function sendMessage()
-    {
-        $this->validate([
-            'message' => 'required|string|max:1000',
-        ]);
-
-        $newMessage = Message::create([
-            'sender_id' => Auth::id(),
-            'receiver_id' => $this->channel->user->id,
-            'message' => $this->message,
-            'channel_id' => $this->channel->id,
-        ]);
-
-        $newMessage->load('sender');
-        $messageData = [
-            'id' => $newMessage->id,
-            'sender_id' => Auth::id(),
-            'message' => $this->message,
-            'sender_name' => Auth::user()->name,
-            'read_at' => null,
-            'created_at' => now()->format('H:i'),
-            'is_mine' => true
-        ];
-
-        $this->messages[] = $messageData;
-
-        event(new MessageSent($newMessage));
-        event(new UserTyping($this->channel->id, Auth::id(), Auth::user()->name, false));
-
-        $this->message = '';
-        $this->dispatch('messageSent');
     }
 
     public function render()
