@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AccessManager;
 use App\Http\Middleware\ChannelAccess;
 use App\Http\Middleware\RoleRedirect;
 use App\Providers\BroadcastServiceProvider;
@@ -17,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'role' => CheckRole::class,
-            'channel' => ChannelAccess::class,
+            'accesser' => AccessManager::class,
             'role.redirect' => RoleRedirect::class,
         ]);
     })

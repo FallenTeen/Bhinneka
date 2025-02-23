@@ -22,6 +22,9 @@
                 @case('Admin')
                     @livewire('layout.admin-navigation')
                     @break
+                @case('Investor')
+                    @livewire('layout.investor-navigation')
+                    @break
                 @case('Creator')
                     @livewire('layout.creator-navigation')
                     @break

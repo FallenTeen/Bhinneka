@@ -46,9 +46,9 @@ new class extends Component {
     <div class="max hidden text-white mt-16 flex-col space-y-2 w-full h-[calc(100vh)]">
         <div class="flex flex-col w-full px-6 rounded-full transform ease-in-out duration-300">
             <div class="">
-                @if (Auth::check() && Auth::user()->channels->isNotEmpty())
+                @if (Auth::check() && Auth::user()->investors->isNotEmpty())
                     <a href="{{route('creator.channel')}}" class="flex flex-row items-center gap-4">
-                        @if (Auth::user()->channels->first()->verified)
+                        @if (Auth::user()->investors->first()->verified)
                             <div class="text-blue-400 pl-4 border-2 border-transparent mt-2 mb-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                     stroke="currentColor" class="size-5">
@@ -57,11 +57,12 @@ new class extends Component {
                                 </svg>
                             </div>
                         @endif
-                        <span class="text-lg font-semibold line-clamp-1">{{ Auth::user()->channels->first()->channel_name }}</span>
+                        <span
+                            class="text-lg font-semibold line-clamp-1">{{ Auth::user()->investors->first()->company_name }}</span>
                     </a>
 
                 @else
-                    <a href="{{ route('user.channel.create') }}"
+                    <a href="{{ route('user.investor.create') }}"
                         class="w-full flex  bg-gradient-to-r dark:from-cyan-500 dark:to-blue-500 from-indigo-500 via-purple-500 to-purple-500 px-4 py-2 rounded-lg text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-5">
@@ -76,7 +77,7 @@ new class extends Component {
             </div>
 
         </div>
-        <a href="{{route('creator.dashboard')}}"
+        <a href="{{route('investor.dashboard')}}"
             class="border-2 px-4 py-2 mx-6 rounded-lg flex flex-row items-center space-x-3 transform ease-in-out duration-300
             {{ request()->routeIs('creator.dashboard') ? 'border-white text-white hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' : 'border-transparent hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' }} bg-[#1E293B]">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -86,7 +87,7 @@ new class extends Component {
             </svg>
             <div>Home</div>
         </a>
-        <a href="{{route('channel.chat')}}"
+        <a href="{{route('investor.chat')}}"
             class="border-2 px-4 py-2 mx-6 rounded-lg flex flex-row items-center space-x-3 transform ease-in-out duration-300
             {{ request()->routeIs('channel.chat') ? 'border-white text-white hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' : 'border-transparent hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' }} bg-[#1E293B]">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

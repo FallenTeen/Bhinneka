@@ -45,14 +45,17 @@ Route::middleware(['role:Admin', 'auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/user/dashboard', 'user.dashboard')->name('user.dashboard');
     Route::get('/channel/create', \App\Livewire\Channel\Create::class)
-        ->middleware('channel')
+        ->middleware('accesser')
         ->name('user.channel.create');
+    Route::get('/investor-profile/create', \App\Livewire\Investor\Create::class)
+        ->middleware('accesser')
+        ->name('user.investor.create');
 
 });
 // Jembatan boy
-Route::view('/waiting', 'creator.verification-pending')->middleware('channel')->name('channel.waiting');
+Route::view('/waiting', 'verification-pending')->middleware('accesser')->name('waiting');
 // Creator
-Route::middleware(['auth', 'verified', 'channel', 'role:Creator'])->group(function () {
+Route::middleware(['auth', 'verified', 'accesser', 'role:Creator'])->group(function () {
     Route::view('/creator/dashboard', 'creator.dashboard')->name('creator.dashboard');
     Route::view('/channel', 'creator.channel')->name('creator.channel');
     Route::view('/channel/chats', 'creator.chat')->name('channel.chat');
@@ -61,8 +64,10 @@ Route::middleware(['auth', 'verified', 'channel', 'role:Creator'])->group(functi
 });
 
 // Investor
-Route::middleware(['role:Investor', 'auth', 'verified'])->group(function () {
+Route::middleware(['role:Investor', 'auth', 'accesser', 'verified'])->group(function () {
     Route::view('/investor/dashboard', 'investor.dashboard')->name('investor.dashboard');
+    Route::view('/investor', 'investor.profile')->name('investor.profile');
+    Route::view('/investor/chats', 'investor.chat')->name('investor.chat');
 });
 
 // Investor Public Routes
