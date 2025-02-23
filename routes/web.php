@@ -4,12 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Request;
-use Livewire\Livewire;
-use Mews\Captcha\Facades\Captcha;
-use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::routes(['middleware' => ['web', 'auth']]);
-
 
 Route::get('/logout', function () {
     Auth::logout();
@@ -17,16 +13,17 @@ Route::get('/logout', function () {
     request()->session()->regenerateToken();
     return redirect('/');
 })->name('logout');
+
 Route::get('/captcha/refresh', function (Request $request) {
     return response()->json(['captcha' => captcha_src()]);
 });
-
 
 Route::view('/', 'landing')->name('home');
 Route::view('/content', 'content')->name('content');
 Route::view('/pricing', 'landing')->name('pricing');
 Route::view('/channels/{slug}', 'channelshow')->name('channel.show');
 Route::view('/content/{slug}', 'contentshow')->name('content.show');
+Route::view('profile', 'admin.profile')->name('profile');
 Route::middleware(['auth', 'role.redirect', 'verified'])->get('/dashboard', function () { })->name('dashboard');
 
 Route::get('/thumbnail/{encrypted}', function ($encrypted) {
@@ -38,42 +35,43 @@ Route::get('/thumbnail/{encrypted}', function ($encrypted) {
     }
 })->where('encrypted', '.*')->name('thumbnail');
 
-
 // Admin
 Route::middleware(['role:Admin', 'auth', 'verified'])->group(function () {
     Route::view('/admin/dashboard', 'admin.dashboard')->name('admin.dashboard');
+    Route::view('/admin/review-dokumen-daftar', 'admin.review-dokumen-daftar')->name('admin.review-dokumen-daftar');
 });
 
 // User
-Route::middleware(['role:User', 'auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/user/dashboard', 'user.dashboard')->name('user.dashboard');
-    Route::middleware(['hasChannel'])->group(function () {
-        Route::get('/channel/create', \App\Livewire\Channel\Create::class)->name('user.channel.create');
-    });
+    Route::get('/channel/create', \App\Livewire\Channel\Create::class)
+        ->middleware('channel')
+        ->name('user.channel.create');
+
 });
-
+// Jembatan boy
+Route::view('/waiting', 'creator.verification-pending')->middleware('channel')->name('channel.waiting');
 // Creator
-Route::middleware(['role:Creator', 'hasChannel', 'auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'channel', 'role:Creator'])->group(function () {
     Route::view('/creator/dashboard', 'creator.dashboard')->name('creator.dashboard');
-
     Route::view('/channel', 'creator.channel')->name('creator.channel');
     Route::view('/channel/chats', 'creator.chat')->name('channel.chat');
-    // Route::view('/channel/edit', 'user.channel.edit')->name('user.channel.edit');
-    // Route::view('/channel/dashboard', 'user.channel.dashboard')->name('user.channel.dashboard');
-
-
-    Route::get('/channel/content/create', \App\Livewire\Video\VideoContentCreate::class)->name('creator.content.create');
+    Route::get('/channel/content/create', \App\Livewire\Video\VideoContentCreate::class)
+        ->name('creator.content.create');
 });
 
 // Investor
 Route::middleware(['role:Investor', 'auth', 'verified'])->group(function () {
     Route::view('/investor/dashboard', 'investor.dashboard')->name('investor.dashboard');
 });
-Route::view('profile', 'admin.profile')->name('profile');
 
+// Investor Public Routes
+Route::middleware(['auth', 'verified', 'role:1,2,3'])->group(function () {
+    Route::view('/investors', 'investor')->name('investor');
+    Route::view('/investors/{slug}', 'investorshow')->name('investor.show');
+});
 
-//SECURITYYYY
-
+// Thumbnail Security
 Route::get('/thumbnail/{encodedUrl}', function ($encodedUrl) {
     try {
         $thumbnailUrl = Crypt::decryptString($encodedUrl);

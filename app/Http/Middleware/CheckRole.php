@@ -4,48 +4,34 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
 class CheckRole
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
+    protected $roleIds = [
+        'Admin' => 1,
+        'Investor' => 2,
+        'Creator' => 3,
+        'User' => 4
+    ];
+
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        if ($request->path() === '/') {
-            return $next($request);
-        }
-
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
-        $user = Auth::user();
-        $adminRoutes = [
-            '/dashboard',
-            '/',
-        ];
-        $userRoutes = [
-            '/',
-        ];
+        $userRole = Auth::user()->role->role;
+        $userRoleId = Auth::user()->role_id;
 
-        if ($user->role->role === ['Admin','Investor','Creator']) {
-            // Admin dapat mengakses semua route yang ada di whitelist
-            return $next($request);
-            
-        } 
-        elseif ($user->role->role === ['user','Guest']) {
-            // User hanya dapat mengakses route yang ada di whitelist
-            if (!in_array($request->path(), $userRoutes)) {
-                return redirect('/'); // Redirect ke /
+        if (is_numeric($roles[0])) {
+            if (in_array($userRoleId, $roles)) {
+                return $next($request);
             }
+        } elseif (in_array($userRole, $roles)) {
             return $next($request);
         }
 
-        return $next($request);
+        return abort(404, 'Not Found');
     }
 }

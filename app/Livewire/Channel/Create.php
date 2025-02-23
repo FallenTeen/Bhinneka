@@ -7,22 +7,24 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Channel;
+use App\Models\Registration;
 
 class Create extends Component
 {
     use WithFileUploads;
 
     public $channel_name, $slug, $deskripsi, $avatar, $exlink = [], $terms_agreement = false, $captcha;
+    public $document1, $document2, $document3;
 
     public function updatedChannelName()
     {
         $this->slug = Str::slug($this->channel_name);
     }
-    public function refreshCaptcha()
-{
-    $this->dispatch('refreshCaptcha');
-}
 
+    public function refreshCaptcha()
+    {
+        $this->dispatch('refreshCaptcha');
+    }
 
     public function save()
     {
@@ -33,6 +35,9 @@ class Create extends Component
             'avatar' => 'nullable|image|max:2048',
             'captcha' => 'required|captcha',
             'terms_agreement' => 'accepted',
+            'document1' => 'required|mimes:pdf,docx|max:2048',
+            'document2' => 'nullable|mimes:pdf,docx|max:2048',
+            'document3' => 'nullable|mimes:pdf,docx|max:2048',
         ]);
 
         $avatarPath = null;
@@ -50,13 +55,31 @@ class Create extends Component
             'exlink' => json_encode($this->exlink),
             'verified' => false,
         ]);
+        $this->storeRegistration($this->document1, $this->document2, $this->document3);
 
-        $user = Auth::user();
-        $user->role_id = 3;
-        $user->save();
-
-        return redirect()->route('creator.channel');
+        return redirect()->route('channel.waiting');
     }
+    private function storeRegistration($document1, $document2, $document3)
+    {
+        $registration = Registration::create([
+            'user_id' => Auth::id(),
+            'registration_type' => 'channel_owner',
+        ]);
+
+        $this->storeDocument($registration, $document1, 'document1');
+        $this->storeDocument($registration, $document2, 'document2');
+        $this->storeDocument($registration, $document3, 'document3');
+    }
+    private function storeDocument(Registration $registration, $file, $attribute)
+    {
+        $fileName = Str::random(40) . '.pdf';
+        $filePath = $file->storeAs('channel_documents', $fileName, 'public');
+
+        $registration->{$attribute . '_path'} = $filePath;
+        $registration->{$attribute . '_name'} = $file->getClientOriginalName();
+        $registration->save();
+    }
+
     public function render()
     {
         return view('livewire.channel.create')->layout('layouts.app');

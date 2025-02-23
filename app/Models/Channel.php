@@ -37,4 +37,13 @@ class Channel extends Model
     {
         return $this->hasMany(Message::class);
     }
+    protected static function booted()
+    {
+        static::deleted(function ($channel) {
+            if ($channel->user->channels->count() === 1) {
+                $channel->user->role_id = 4;
+                $channel->user->save();
+            }
+        });
+    }
 }
