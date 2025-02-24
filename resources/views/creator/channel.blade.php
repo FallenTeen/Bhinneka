@@ -1,11 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Channel') }}
-        </h2>
-        <h2 class="text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ ucfirst(optional(Auth::user()->channels->first())->channel_name ?? 'No Channel') }}
-        </h2>
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <h2 class="font-semibold text-2xl text-gray-800 dark:text-gray-200 leading-tight">
+                {{ __('Channel') }}
+            </h2>
+            <h2 class="text-xl text-gray-800 dark:text-gray-200 leading-tight font-medium">
+                {{ ucfirst(optional(Auth::user()->channels->first())->channel_name ?? 'No Channel') }}
+            </h2>
+        </div>
     </x-slot>
 
     @php
@@ -13,79 +15,84 @@
     @endphp
 
     @if ($channel && $channel->verified)
-        <div class="w-full p-8 rounded-lg grid grid-cols-2 gap-8">
-            <div class="w-full bg-white p-6 flex flex-col col-span-2 shadow-lg">
-                <div class="w-full flex justify-between">
-                    <span class="text-lg font-bold mb-3">Channel Information</span>
+        <div class="w-full p-4 md:p-8 grid gap-6 md:gap-8">
+            <!-- Channel Information Card -->
+            <div
+                class="w-full bg-white dark:bg-gray-800 rounded-xl p-4 md:p-6 shadow-lg transition-all duration-300 hover:shadow-xl">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-xl font-bold text-gray-800 dark:text-gray-200">Channel Information</span>
                     <a href="{{ route('creator.channel') }}"
-                        class="rounded-lg relative w-36 h-10 cursor-pointer flex items-center border border-ungumain bg-ungumain group hover:bg-ungumain active:bg-ungumain active:border-ungumain">
-                        <span
-                            class="text-gray-200 font-semibold mx-4 transform group-hover:translate-x-20 transition-all duration-300">
-                            Edit Info
-                        </span>
-                        <span
-                            class="text-white absolute right-0 h-full w-10 rounded-lg bg-ungumain flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                        class="group relative overflow-hidden rounded-lg px-4 py-2 bg-ungumain text-white hover:bg-ungumain/90 transition-all duration-300 transform hover:scale-105">
+                        <div class="flex items-center gap-2">
+                            <span class="font-medium">Edit Info</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z" />
                             </svg>
-                        </span>
+                        </div>
                     </a>
                 </div>
-                <div class="w-full flex items-center px-8">
-                    <div class="w-1/6 overflow-hidden">
+
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-6 px-4">
+                    <div class="w-32 md:w-48 aspect-square rounded-full overflow-hidden ring-4 ring-ungumain/20">
                         <img src="{{ asset($channel->avatar ? 'storage/' . $channel->avatar : 'storage/avatarsimages/default-avatar.png') }}"
-                            alt="Avatar" class="w-full h-full object-cover rounded-full aspect-square ">
+                            alt="{{ $channel->channel_name }}'s Avatar"
+                            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
                     </div>
 
-                    <div class="w-5/6 px-8">
-                        <div class="flex flex-col">
-                            <span class="text-3xl font-bold">{{ $channel->channel_name }}</span>
-                            <h3 class="mt-2 font-semibold opacity-55 text-sm italic tracking-tight">
-                                Bergabung pada
-                                {{ \Carbon\Carbon::parse($channel->created_at)->format('F Y') }}
-                            </h3>
-                            <span class="">{{ $channel->deskripsi }}</span>
+                    <div class="flex-1 space-y-4">
+                        <div>
+                            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">
+                                {{ $channel->channel_name }}
+                            </h1>
+                            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 italic">
+                                Bergabung pada {{ \Carbon\Carbon::parse($channel->created_at)->format('F Y') }}
+                            </p>
                         </div>
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                            {{ $channel->deskripsi }}
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <div class="w-full bg-white p-6 flex col-span-2 shadow-lg">
-                <div class="w-full">
-                    <div class="w-full flex justify-between">
-                        <span class="text-lg font-bold mb-3">Content</span>
-                        <a href="{{ route('creator.content.create') }}"
-                            class="rounded-lg relative w-36 h-10 cursor-pointer flex items-center border border-ungumain bg-ungumain group hover:bg-ungumain active:bg-ungumain active:border-ungumain">
-                            <span
-                                class="text-gray-200 font-semibold  mx-4 transform group-hover:translate-x-20 transition-all duration-300">
-                                Add Item
-                            </span>
-                            <span
-                                class="absolute right-0 h-full w-10 rounded-lg bg-ungumain flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300">
-                                <svg class="svg w-8 text-white" fill="none" height="24" stroke="currentColor"
-                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
-                                    width="24" xmlns="http://www.w3.org/2000/svg">
-                                    <line x1="12" x2="12" y1="5" y2="19"></line>
-                                    <line x1="5" x2="19" y1="12" y2="12"></line>
-                                </svg>
-                            </span>
-                        </a>
-                    </div>
+            <!-- Content Section -->
+            <div class="w-full bg-white dark:bg-gray-800 rounded-xl p-4 md:p-6 shadow-lg">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <span class="text-xl font-bold text-gray-800 dark:text-gray-200">Content</span>
+                    <a href="{{ route('creator.content.create') }}"
+                        class="group relative overflow-hidden rounded-lg px-4 py-2 bg-ungumain text-white hover:bg-ungumain/90 transition-all duration-300 transform hover:scale-105">
+                        <div class="flex items-center gap-2">
+                            <span class="font-medium">Add Content</span>
+                            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="overflow-hidden">
                     @livewire('component.content-video-dashboard', ['slug' => $channel->slug, 'hidename' => true])
                 </div>
             </div>
-
         </div>
     @else
-        <div class="flex items-center justify-center h-96">
-            <div class="text-center">
-                <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Menunggu Verifikasi oleh Admin</h2>
-                <p class="text-gray-500">Silakan tunggu hingga channel Anda diverifikasi oleh admin sebelum mengakses konten
-                    ini.</p>
+        <div class="min-h-[50vh] flex items-center justify-center p-4">
+            <div class="text-center max-w-lg bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
+                <div class="mb-6">
+                    <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                    Menunggu Verifikasi
+                </h2>
+                <p class="text-gray-600 dark:text-gray-400">
+                    Silakan tunggu hingga channel Anda diverifikasi oleh admin sebelum mengakses konten ini.
+                </p>
             </div>
         </div>
     @endif
-
 </x-app-layout>

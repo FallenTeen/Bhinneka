@@ -47,7 +47,7 @@ new class extends Component {
         <div class="flex flex-col w-full px-6 rounded-full transform ease-in-out duration-300">
             <div class="">
                 @if (Auth::check() && Auth::user()->investors->isNotEmpty())
-                    <a href="{{route('creator.channel')}}" class="flex flex-row items-center gap-4">
+                    <a href="{{route('investor.profile')}}" class="flex flex-row items-center gap-4">
                         @if (Auth::user()->investors->first()->verified)
                             <div class="text-blue-400 pl-4 border-2 border-transparent mt-2 mb-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -70,7 +70,7 @@ new class extends Component {
                                 d="M9.348 14.652a3.75 3.75 0 0 1 0-5.304m5.304 0a3.75 3.75 0 0 1 0 5.304m-7.425 2.121a6.75 6.75 0 0 1 0-9.546m9.546 0a6.75 6.75 0 0 1 0 9.546M5.106 18.894c-3.808-3.807-3.808-9.98 0-13.788m13.788 0c3.808 3.807 3.808 9.98 0 13.788M12 12h.008v.008H12V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                         </svg>
                         <span class="ml-2 text-sm">
-                            Buat Channel
+                            Buat Profil
                         </span>
                     </a>
                 @endif
@@ -86,6 +86,17 @@ new class extends Component {
                     d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
             </svg>
             <div>Home</div>
+        </a>
+        <a href="{{route('investor.appliance')}}"
+            class="border-2 px-4 py-2 mx-6 rounded-lg flex flex-row items-center space-x-3 transform ease-in-out duration-300
+            {{ request()->routeIs('creator.dashboard') ? 'border-white text-white hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' : 'border-transparent hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' }} bg-[#1E293B]">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m-6 3.75 3 3m0 0 3-3m-3 3V1.5m6 9h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75" />
+            </svg>
+
+            <div>Appliance</div>
         </a>
         <a href="{{route('investor.chat')}}"
             class="border-2 px-4 py-2 mx-6 rounded-lg flex flex-row items-center space-x-3 transform ease-in-out duration-300
@@ -116,6 +127,14 @@ new class extends Component {
                 stroke="currentColor" class="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round"
                     d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+            </svg>
+        </div>
+        <div onclick="openNav()"
+            class="border-2 border-transparent hover:ml-4 justify-end pr-5 text-gray-200 hover:text-purple-500 dark:hover:text-blue-500 w-full bg-[#1E293B] p-2 rounded-full transform ease-in-out duration-300 flex">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m-6 3.75 3 3m0 0 3-3m-3 3V1.5m6 9h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75" />
             </svg>
         </div>
         <div onclick="openNav()"

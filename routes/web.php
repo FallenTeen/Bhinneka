@@ -66,7 +66,10 @@ Route::middleware(['auth', 'verified', 'accesser', 'role:Creator'])->group(funct
 // Investor
 Route::middleware(['role:Investor', 'auth', 'accesser', 'verified'])->group(function () {
     Route::view('/investor/dashboard', 'investor.dashboard')->name('investor.dashboard');
-    Route::view('/investor', 'investor.profile')->name('investor.profile');
+    Route::view('/investor', 'investor.investor-profile')->name('investor.profile');
+    Route::view('/investor/postindex', 'investor.post-index')->name('investor.post.index');
+    Route::view('/investor/appliance', 'investor.appliance')->name('investor.appliance');
+    Route::view('/investor/postcreate', 'investor.post-create')->name('investor.post.create');
     Route::view('/investor/chats', 'investor.chat')->name('investor.chat');
 });
 
