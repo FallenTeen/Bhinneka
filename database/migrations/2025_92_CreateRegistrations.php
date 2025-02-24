@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('document3_path')->nullable();
             $table->string('document3_name')->nullable();
             $table->string('registration_type');
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -18,6 +18,7 @@ class Registration extends Model
         'document3_path',
         'document3_name',
         'registration_type',
+        'status',
     ];
 
     public function user()

@@ -37,6 +37,10 @@ class Channel extends Model
     {
         return $this->hasMany(Message::class);
     }
+    public function registration()
+    {
+        return $this->hasOne(Registration::class);
+    }
     protected static function booted()
     {
         static::deleted(function ($channel) {

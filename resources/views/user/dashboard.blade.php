@@ -1,13 +1,29 @@
 <x-app-layout>
 
     <div class="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
-        <!-- Animated Background Pattern -->
         <div class="absolute inset-0 opacity-20">
             <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAzNGgxMnYxMkgzNnoiLz48cGF0aCBkPSJNMTIgMTJoMTJ2MTJIMTJ6IiBmaWxsPSJjdXJyZW50Q29sb3IiIG9wYWNpdHk9Ii4xNSIvPjwvZz48L3N2Zz4=')] [mask-image:linear-gradient(0deg,white,transparent)]"></div>
         </div>
-
-        <div class="relative z-10 py-12 px-4 sm:px-6 lg:px-8">
-            <!-- Welcome Section -->
+ @if(Auth::user()->channels->isNotEmpty() && !Auth::user()->channels->first()->verified)
+ <div class="h-screen flex items-center justify-center">
+    <div class="max-w-7xl text-center mb-12" x-data="{ show: false, redirect: false }" x-init="setTimeout(() => show = true, 500); setTimeout(() => redirect = true, 2000)">
+        <h1 class="text-5xl font-extrabold mb-6" x-show="show" x-transition>
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 animate-pulse">
+                Selamat Datang, {{ Auth::user()->name }}!
+            </span>
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Bergabung sebagai bagian dari kami sekarang!
+        </p>
+        <div x-show="redirect">
+            <script>
+                window.location.href = "{{ route('waiting') }}";
+            </script>
+        </div>
+    </div>
+</div>
+ @else
+ <div class="relative z-10 py-12 px-4 sm:px-6 lg:px-8">
             <div class="max-w-7xl mx-auto text-center mb-12" x-data="{ show: false }" x-init="setTimeout(() => show = true, 500)">
                 <h1 class="text-5xl font-extrabold mb-6" x-show="show" x-transition>
                     <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 animate-pulse">
@@ -18,10 +34,7 @@
                    Bergabung sebagai bagian dari kami sekarang!
                 </p>
             </div>
-
-            <!-- Main Cards -->
             <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
-                <!-- Investor Card -->
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden" x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false">
                     <div class="p-6">
                         <div class="flex items-center gap-3 mb-4">
@@ -43,8 +56,6 @@
                     </div>
                     <div class="h-2 bg-gradient-to-r from-blue-500 to-blue-700" :class="{ 'animate-pulse': hover }"></div>
                 </div>
-
-                <!-- Channel Card -->
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden" x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false">
                     <div class="p-6">
                         <div class="flex items-center gap-3 mb-4">
@@ -67,8 +78,6 @@
                     <div class="h-2 bg-gradient-to-r from-green-500 to-green-700" :class="{ 'animate-pulse': hover }"></div>
                 </div>
             </div>
-
-            <!-- Features Section -->
             <div class="max-w-7xl mx-auto mt-16 px-4">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Security Feature -->
@@ -106,5 +115,7 @@
                 </div>
             </div>
         </div>
+ @endif
+        
     </div>
 </x-app-layout>

@@ -87,6 +87,18 @@ new class extends Component {
             </svg>
             <div>Home</div>
         </a>
+        <a href="{{route('investor.post.index')}}"
+            class="border-2 px-4 py-2 mx-6 rounded-lg flex flex-row items-center space-x-3 transform ease-in-out duration-300
+            {{ request()->routeIs('creator.dashboard') ? 'border-white text-white hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' : 'border-transparent hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' }} bg-[#1E293B]">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="h-4 w-4">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
+            </svg>
+
+
+            <div>Your Post</div>
+        </a>
         <a href="{{route('investor.appliance')}}"
             class="border-2 px-4 py-2 mx-6 rounded-lg flex flex-row items-center space-x-3 transform ease-in-out duration-300
             {{ request()->routeIs('creator.dashboard') ? 'border-white text-white hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' : 'border-transparent hover:border-ungumain hover:text-ungumain dark:hover:text-blue-500' }} bg-[#1E293B]">
@@ -131,7 +143,7 @@ new class extends Component {
         </div>
         <div onclick="openNav()"
             class="border-2 border-transparent hover:ml-4 justify-end pr-5 text-gray-200 hover:text-purple-500 dark:hover:text-blue-500 w-full bg-[#1E293B] p-2 rounded-full transform ease-in-out duration-300 flex">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="{1}"
                 stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m-6 3.75 3 3m0 0 3-3m-3 3V1.5m6 9h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75" />

@@ -75,7 +75,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Message::class, 'sender');
     }
-
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class);
+    }
     public function receivedMessages()
     {
         return $this->hasMany(Message::class, 'receiver');

@@ -57,13 +57,13 @@ class Create extends Component
         ]);
         $this->storeRegistration($this->document1, $this->document2, $this->document3);
 
-        return redirect()->route('channel.waiting');
+        return redirect()->route('waiting');
     }
     private function storeRegistration($document1, $document2, $document3)
     {
         $registration = Registration::create([
             'user_id' => Auth::id(),
-            'registration_type' => 'channel_owner',
+            'registration_type' => 'Creator',
         ]);
 
         $this->storeDocument($registration, $document1, 'document1');

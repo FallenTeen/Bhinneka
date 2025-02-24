@@ -145,7 +145,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
-                                <input type="text" wire:model.defer="editingPost.title" id="title"
+                                <input type="text" wire:model="editingPost.title" id="title"
                                     class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                                 @error('editingPost.title')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -197,7 +197,6 @@
                                 @enderror
                             </div>
 
-                            {{-- Salary Range Fields --}}
                             <div>
                                 <label for="salary_range_start" class="block text-sm font-medium text-gray-700 mb-1">Gaji
                                     Minimum</label>

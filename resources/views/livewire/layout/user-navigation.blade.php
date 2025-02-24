@@ -47,7 +47,7 @@ new class extends Component {
         <div class="flex flex-col w-full px-6 rounded-full transform ease-in-out duration-300">
             <div class="flex flex-row items-center gap-4">
                 @if (Auth::check() && Auth::user()->channels->isNotEmpty())
-                    <a href="{{route('channel.waiting')}}" class="flex flex-row items-center gap-4">
+                    <a href="{{route('waiting')}}" class="flex flex-row items-center gap-4">
                         @if (Auth::user()->channels->first()->verified)
                             <div class="text-blue-400 pl-4 border-2 border-transparent mt-2 mb-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

@@ -91,9 +91,6 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-4">
-                @livewire('component.investor-posts', ['investorId' => $investor->id])
-            </div>
         </div>
     @else
         <div x-data="{ bounce: false }" 

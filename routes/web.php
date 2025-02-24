@@ -38,6 +38,7 @@ Route::get('/thumbnail/{encrypted}', function ($encrypted) {
 // Admin
 Route::middleware(['role:Admin', 'auth', 'verified'])->group(function () {
     Route::view('/admin/dashboard', 'admin.dashboard')->name('admin.dashboard');
+    Route::view('/admin/list-user-all', 'admin.list-user-all')->name('admin.list-user-all');
     Route::view('/admin/review-dokumen-daftar', 'admin.review-dokumen-daftar')->name('admin.review-dokumen-daftar');
 });
 
@@ -75,8 +76,8 @@ Route::middleware(['role:Investor', 'auth', 'accesser', 'verified'])->group(func
 
 // Investor Public Routes
 Route::middleware(['auth', 'verified', 'role:1,2,3'])->group(function () {
-    Route::view('/investors', 'investor')->name('investor');
-    Route::view('/investors/{slug}', 'investorshow')->name('investor.show');
+    Route::view('/investors', 'investor')->name('allinvestor');
+    Route::view('/investors/{slug}', 'investorshow')->name('allinvestor.show');
 });
 
 // Thumbnail Security

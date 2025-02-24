@@ -82,7 +82,7 @@ class Create extends Component
     {
         $registration = Registration::create([
             'user_id' => Auth::id(),
-            'registration_type' => 'investor',
+            'registration_type' => 'Investor',
         ]);
 
         $fileName = Str::random(40) . '.pdf';
