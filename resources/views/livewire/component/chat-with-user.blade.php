@@ -28,8 +28,6 @@
         @if($selectedUser)
             <div class="p-4 bg-ungumain text-white flex justify-between items-center">
                 <h3 class="text-lg font-semibold">{{ $selectedUser->name }}</h3>
-            </div>
-            <!-- Replace your current message container with this -->
             <!-- Replace the complex message container with this simpler version -->
             <div class="flex-1 overflow-y-auto p-4 space-y-3" id="messageContainer">
                 @foreach($messages as $msg)

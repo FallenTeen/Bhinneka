@@ -13,6 +13,7 @@ class InvestorProfile extends Model
         'user_id',
         'company_name',
         'description',
+        'address',
         'investment_range',
         'website',
         'avatar',

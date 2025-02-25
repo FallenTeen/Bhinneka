@@ -5,16 +5,19 @@ namespace App\Livewire\Component;
 use Livewire\Component;
 use App\Models\Registration;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegistrationRejected;
 
 class AdminReviewRegistration extends Component
 {
     use WithPagination;
 
     public $search = '', $perPage = 10, $sortField = 'created_at', $sortAsc = false;
-    public $viewingRegistration = null;
-
-    public $showModal = false;
+    public $showModal = false, $viewingRegistration = null, $showDescriptionModal = false, $showAvatarModal = false;
     public $selectedRegistration = null;
+    public $showRejectionModal = false;
+    public $rejectionMessage = '';
+    public $registrationIdToReject = null;
 
     protected $listeners = ['refreshRegistrations' => '$refresh'];
 
@@ -51,15 +54,26 @@ class AdminReviewRegistration extends Component
         $registration = Registration::findOrFail($registrationId);
         $registration->status = 'approved';
         $registration->save();
-        if ($registration->registration_type === 'Creator' && $registration->user->channels->count() > 0) {
-            foreach ($registration->user->channels as $channel) {
-                $channel->verified = true;
-                $channel->save();
+
+        if ($registration->registration_type === 'Creator') {
+            $registration->user->role_id = 3;
+            $registration->user->save();
+
+            if ($registration->user->channels->count() > 0) {
+                foreach ($registration->user->channels as $channel) {
+                    $channel->verified = true;
+                    $channel->save();
+                }
             }
-        } elseif ($registration->registration_type === 'Investor' && $registration->user->investors->count() > 0) {
-            foreach ($registration->user->investors as $investor) {
-                $investor->verified = true;
-                $investor->save();
+        } elseif ($registration->registration_type === 'Investor') {
+            $registration->user->role_id = 2;
+            $registration->user->save();
+
+            if ($registration->user->investors->count() > 0) {
+                foreach ($registration->user->investors as $investor) {
+                    $investor->verified = true;
+                    $investor->save();
+                }
             }
         }
 
@@ -72,21 +86,62 @@ class AdminReviewRegistration extends Component
             $this->closeModal();
         }
     }
-
-    public function rejectRegistration($registrationId)
+    public function openRejectionModal($registrationId)
     {
-        $registration = Registration::findOrFail($registrationId);
+        $this->registrationIdToReject = $registrationId;
+        $this->rejectionMessage = '';
+        $this->showRejectionModal = true;
+    }
+
+    public function closeRejectionModal()
+    {
+        $this->showRejectionModal = false;
+        $this->registrationIdToReject = null;
+        $this->rejectionMessage = '';
+    }
+    public function confirmRejection()
+    {
+        if (!$this->registrationIdToReject) {
+            return;
+        }
+
+        $registration = Registration::where('id', $this->registrationIdToReject)->first();
+
+        if (!$registration) {
+            $this->dispatch('notification', [
+                'type' => 'error',
+                'message' => 'Registration not found.'
+            ]);
+            $this->closeRejectionModal();
+            return;
+        }
+
+        $userId = $registration->user_id;
         $registration->status = 'rejected';
         $registration->save();
 
+        if ($registration->registration_type === 'Creator') {
+            $channels = \App\Models\Channel::where('user_id', $userId)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } elseif ($registration->registration_type === 'Investor') {
+            $investorProfiles = \App\Models\InvestorProfile::where('user_id', $userId)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
+        Mail::to($registration->user->email)->send(new RegistrationRejected($registration, $this->rejectionMessage));
+
         $this->dispatch('notification', [
             'type' => 'info',
-            'message' => 'Registration rejected.'
+            'message' => 'Registration rejected and ownership of associated records has been transferred to history.'
         ]);
 
-        if ($this->selectedRegistration && $this->selectedRegistration->id === $registrationId) {
+        if ($this->selectedRegistration && $this->selectedRegistration->id === $this->registrationIdToReject) {
             $this->closeModal();
         }
+
+        $this->closeRejectionModal();
     }
 
     public function resetStatus($registrationId)

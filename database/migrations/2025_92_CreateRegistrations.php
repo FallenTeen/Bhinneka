@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('document2_name')->nullable();
             $table->string('document3_path')->nullable();
             $table->string('document3_name')->nullable();
-            $table->string('registration_type');
+            $table->enum('registration_type',['Creator','Investor']);
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
 

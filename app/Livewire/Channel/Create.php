@@ -61,10 +61,19 @@ class Create extends Component
     }
     private function storeRegistration($document1, $document2, $document3)
     {
-        $registration = Registration::create([
-            'user_id' => Auth::id(),
-            'registration_type' => 'Creator',
-        ]);
+        $existingRegistration = Registration::where('user_id', Auth::id())
+            ->where('registration_type', 'Creator')
+            ->where('status', 'pending')
+            ->first();
+
+        if ($existingRegistration) {
+            $registration = $existingRegistration;
+        } else {
+            $registration = Registration::create([
+                'user_id' => Auth::id(),
+                'registration_type' => 'Creator',
+            ]);
+        }
 
         $this->storeDocument($registration, $document1, 'document1');
         $this->storeDocument($registration, $document2, 'document2');
