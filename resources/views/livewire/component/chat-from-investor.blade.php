@@ -1,6 +1,5 @@
 <!-- Chat From Investor -->
 <div class="bg-white shadow-lg mx-4 my-8 rounded-lg flex flex-col min-h-[70vh]">
-    <!-- Chat Type Selector -->
     <div class="flex border-b border-gray-300 bg-gray-100">
         <button wire:click="setChatType('all')"
             class="px-4 py-2 font-medium text-gray-700 border-b-2 {{ $chatType === 'all' ? 'border-ungumain text-ungumain' : 'border-transparent' }}">
@@ -21,8 +20,8 @@
         <div class="w-1/4 border-r border-gray-300 flex flex-col">
             <div class="p-3 border-b border-gray-200">
                 <div class="relative">
-                    <input type="text" wire:model.debounce.500ms="searchQuery" wire:keydown.enter="searchChannelOwners"
-                        placeholder="Search channels or owners..."
+                    <input type="text" wire:model.live.debounce.500ms="searchQuery" wire:keydown.enter="searchChannelOwners"
+                        placeholder="Cari channel"
                         class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-ungumain">
                     <button wire:click="searchChannelOwners"
                         class="absolute right-2 top-2 text-gray-500 hover:text-ungumain">
@@ -55,7 +54,7 @@
                                 @if($result['already_in_chat'])
                                     <button wire:click="selectUser({{ $result['id'] }})"
                                         class="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded border">
-                                        Open Chat
+                                        Buka chat
                                     </button>
                                 @else
                                     <button wire:click="startNewChat({{ $result['id'] }})"
@@ -66,7 +65,7 @@
                             </div>
                         @empty
                             <div class="p-3 text-sm text-gray-500 text-center">
-                                No channels found
+                                Tidak ada hasil
                             </div>
                         @endforelse
                     </div>
@@ -107,8 +106,8 @@
                     </div>
                 @empty
                     <div class="p-4 text-gray-500 text-center">
-                        <p>No channels found</p>
-                        <p class="text-sm mt-1">Try searching for channel owners above</p>
+                        <p>Tidak ada hasil</p>
+                        <p class="text-sm mt-1">Cobalah untuk gunakan panel di atas</p>
                     </div>
                 @endforelse
             </div>
@@ -135,7 +134,7 @@
                                         <p class="text-xs text-gray-200">{{ $channelName }}</p>
                                     @endif
                                 </div>
-                                <span class="ml-2 px-2 py-0.5 bg-blue-300 text-blue-800 text-xs rounded-full">Channel Owner</span>
+                                <span class="ml-2 px-2 py-0.5 bg-blue-300 text-blue-800 text-xs rounded-full">Pemilik channel</span>
                             </div>
                         </div>
 
@@ -151,8 +150,8 @@
                             @empty
                                 <div class="flex items-center justify-center h-full">
                                     <div class="text-center text-gray-500">
-                                        <p>No messages yet</p>
-                                        <p class="text-sm mt-1">Send a message to start the conversation</p>
+                                        <p>Belum ada pesan</p>
+                                        <p class="text-sm mt-1">Kirim Pesan untuk memulai percakapan</p>
                                     </div>
                                 </div>
                             @endforelse
@@ -168,15 +167,11 @@
                                     }
                                 };
                                 scrollToBottom();
-
-                                // Set up polling as a fallback
                                 let pollingInterval = setInterval(() => {
                                     if (@this.enablePolling) {
                                         @this.call('pollForNewMessages');
                                     }
-                                }, 10000); // Poll every 10 seconds
-
-                                // Clear interval when the page is unloaded
+                                }, 10000);
                                 window.addEventListener('beforeunload', () => {
                                     clearInterval(pollingInterval);
                                 });
@@ -246,7 +241,7 @@
                                 placeholder="Type a message">
                             <button wire:click="sendMessage"
                                 class="bg-ungumain text-white px-4 py-2 rounded-r-md hover:bg-purple-700 transition duration-300">
-                                Send
+                                Kirim
                             </button>
                         </div>
             @else
@@ -257,9 +252,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
-                        <p class="text-xl font-medium">Start a Conversation</p>
-                        <p class="text-gray-400">Select a channel owner from the list to start chatting</p>
-                        <p class="text-gray-400">You can also search for specific channels or owners</p>
+                        <p class="text-xl font-medium">Mulai percakapan</p>
+                        <p class="text-gray-400">Pilih user untuk memulai percakapan</p>
+                        <p class="text-gray-400">Anda juga bisa mencari untuk memulai percakapan</p>
                     </div>
                 </div>
             @endif

@@ -18,12 +18,11 @@
     <div class="flex flex-row flex-1">
         <!-- USER LIST SIDEBAR -->
         <div class="w-1/4 border-r border-gray-300 flex flex-col">
-            <!-- Search for Investors - Only shown when on Investors tab -->
             @if($chatType === 'investors')
                 <div class="p-3 border-b border-gray-200">
                     <div class="relative">
-                        <input type="text" wire:model.debounce.500ms="searchQuery" wire:keydown.enter="searchInvestors"
-                            placeholder="Search for investors..."
+                        <input type="text" wire:model.live.debounce.500ms="searchQuery" wire:keydown.enter="searchInvestors"
+                            placeholder="Cari Investor..."
                             class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-ungumain">
                         <button wire:click="searchInvestors"
                             class="absolute right-2 top-2 text-gray-500 hover:text-ungumain">
@@ -35,10 +34,9 @@
                         </button>
                     </div>
 
-                    <!-- Search Results -->
                     @if(!empty($searchResults))
                         <div class="mt-2 border rounded shadow-sm bg-white">
-                            <div class="p-2 border-b bg-gray-50 text-sm font-medium">Search Results</div>
+                            <div class="p-2 border-b bg-gray-50 text-sm font-medium">Hasil Pencarian</div>
                             @forelse($searchResults as $result)
                                 <div class="p-2 border-b hover:bg-gray-50 flex items-center justify-between">
                                     <div class="flex items-center">
@@ -56,7 +54,7 @@
                                     @if($result['already_in_chat'])
                                         <button wire:click="selectUser({{ $result['id'] }})"
                                             class="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded border">
-                                            Open Chat
+                                            Buka Pesan
                                         </button>
                                     @else
                                         <button wire:click="startNewChat({{ $result['id'] }})"
@@ -67,7 +65,7 @@
                                 </div>
                             @empty
                                 <div class="p-3 text-sm text-gray-500 text-center">
-                                    No investors found
+                                    Tidak ada hasil
                                 </div>
                             @endforelse
                         </div>
@@ -112,9 +110,9 @@
                     </div>
                 @empty
                     <div class="p-4 text-gray-500 text-center">
-                        <p>No conversations found</p>
+                        <p>Tidak ada percakapan</p>
                         @if($chatType === 'investors')
-                            <p class="text-sm mt-1">Try searching for investors above</p>
+                            <p class="text-sm mt-1">Coba cari dari investor di atas</p>
                         @endif
                     </div>
                 @endforelse
@@ -166,8 +164,8 @@
                         @empty
                             <div class="flex items-center justify-center h-full">
                                 <div class="text-center text-gray-500">
-                                    <p>No messages yet</p>
-                                    <p class="text-sm mt-1">Send a message to start the conversation</p>
+                                    <p>Belum ada pesan</p>
+                                    <p class="text-sm mt-1">Kirim pesan untuk memulai percakapan</p>
                                 </div>
                             </div>
                         @endforelse
@@ -227,7 +225,7 @@
                             placeholder="Type a message">
                         <button wire:click="sendMessage"
                             class="bg-ungumain text-white px-4 py-2 rounded-r-md hover:bg-purple-700 transition duration-300">
-                            Send
+                            Kirim
                         </button>
                     </div>
             @else
@@ -238,10 +236,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
-                        <p class="text-xl font-medium">Start a Conversation</p>
-                        <p class="text-gray-400">Select a user or investor from the list to start chatting</p>
+                        <p class="text-xl font-medium">Mulai Percakapan</p>
+                        <p class="text-gray-400">Pilih pengguna untuk memulai percakapan</p>
                         @if($chatType === 'investors')
-                            <p class="text-gray-400">You can also search for new investors to connect with</p>
+                            <p class="text-gray-400">Anda juga bisa mencari untuk memulai percakapan</p>
                         @endif
                     </div>
                 </div>
