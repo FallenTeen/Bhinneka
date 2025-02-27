@@ -4,5 +4,5 @@
             {{ __('Chat') }}
         </h2>
     </x-slot>
-    @livewire('component.chat-with-user');
+    @livewire('component.chat-from-channel');
 </x-app-layout>
