@@ -15,11 +15,9 @@
         <x-custom.navbarlanding></x-custom.navbarlanding>
     </div>
 
-    <div class="py-12">
-        @livewire('component.allinvestorposts')
+    <div class="mt-16">
+        @livewire('component.investor-post-show', ['id' => $id])
     </div>
-    </section>
-
     <x-custom.footerlanding></x-custom.footerlanding>
 </body>
 

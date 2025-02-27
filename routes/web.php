@@ -77,7 +77,7 @@ Route::middleware(['role:Investor', 'auth', 'accesser', 'verified'])->group(func
 // Investor Public Routes
 Route::middleware(['auth', 'verified', 'role:1,2,3'])->group(function () {
     Route::view('/investors', 'investor')->name('allinvestor');
-    Route::view('/investors/{slug}', 'investorshow')->name('allinvestor.show');
+    Route::view('/investor/posts/{id}', 'investorpostshow')->name('investor.post.show');
 });
 
 // Thumbnail Security
